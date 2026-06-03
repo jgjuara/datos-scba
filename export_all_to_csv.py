@@ -77,19 +77,48 @@ def validate_csv(csv_path: str, expected_year: int) -> bool:
     return True
 
 
+import argparse
+import datetime
+
+
 def main():
     """
-    Busca, exporta y valida todos los archivos Excel de juzgados civiles y
-    tribunales de trabajo.
+    Busca, exporta y valida los archivos Excel correspondientes (según parámetros de entrada)
+    de juzgados civiles y tribunales de trabajo.
     """
-    # 1. Buscar archivos Excel de Civil y Trabajo
-    civil_patterns = os.path.join("xlsx", "juzgados_civiles_anual_*.xlsx")
-    trabajo_patterns = os.path.join("xlsx", "tribunales_trabajo_anual_*.xlsx")
+    parser = argparse.ArgumentParser(description="Exporta planillas Excel a CSV y las valida.")
+    parser.add_argument("--year", type=int, help="Año específico para procesar.")
+    parser.add_argument("--all", action="store_true", help="Procesar todas las planillas Excel disponibles.")
+    args = parser.parse_args()
 
-    excel_files = sorted(glob.glob(civil_patterns)) + sorted(glob.glob(trabajo_patterns))
+    current_year = datetime.date.today().year
+
+    # Determinar qué archivos procesar según los parámetros provistos
+    if args.year:
+        civil_patterns = [os.path.join("xlsx", f"juzgados_civiles_anual_{args.year}.xlsx")]
+        trabajo_patterns = [os.path.join("xlsx", f"tribunales_trabajo_anual_{args.year}.xlsx")]
+    elif args.all:
+        civil_patterns = glob.glob(os.path.join("xlsx", "juzgados_civiles_anual_*.xlsx"))
+        trabajo_patterns = glob.glob(os.path.join("xlsx", "tribunales_trabajo_anual_*.xlsx"))
+    else:
+        # Por defecto procesa el último año disponible
+        target_year = current_year - 1
+        civil_patterns = [os.path.join("xlsx", f"juzgados_civiles_anual_{target_year}.xlsx")]
+        trabajo_patterns = [os.path.join("xlsx", f"tribunales_trabajo_anual_{target_year}.xlsx")]
+
+    excel_files = []
+    for pattern in civil_patterns + trabajo_patterns:
+        # Si ya se usó glob, solo extender, de lo contrario expandir o verificar si existe
+        if "*" in pattern:
+            excel_files.extend(glob.glob(pattern))
+        else:
+            if os.path.exists(pattern):
+                excel_files.append(pattern)
+
+    excel_files = sorted(list(set(excel_files)))
 
     if not excel_files:
-        print("No se encontraron archivos Excel en la carpeta xlsx/.")
+        print("No se encontraron archivos Excel para procesar.")
         return
 
     print(f"Se encontraron {len(excel_files)} archivos para procesar.")
@@ -107,6 +136,7 @@ def main():
 
         year = int(year_match.group(1))
         csv_name = filename.replace(".xlsx", ".csv")
+        os.makedirs("csv", exist_ok=True)
         csv_path = os.path.join("csv", csv_name)
 
         print(f"\nProcesando: {xlsx_path} -> {csv_path}")
@@ -133,3 +163,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

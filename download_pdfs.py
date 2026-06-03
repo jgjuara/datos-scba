@@ -45,17 +45,33 @@ def download_pdf(client: httpx.Client, url: str, target_path: Path) -> bool:
         return False
 
 
+import argparse
+
+
 def main() -> None:
     """
-    Función principal que coordina la descarga de estadísticas para los años 2017 al año anterior al actual.
+    Función principal que coordina la descarga de estadísticas de forma incremental o completa.
     """
+    parser = argparse.ArgumentParser(description="Descarga reportes PDF de estadísticas judiciales.")
+    parser.add_argument("--year", type=int, help="Año específico para descarga incremental.")
+    parser.add_argument("--all", action="store_true", help="Descargar todo el histórico desde 2017.")
+    args = parser.parse_args()
+
     # Definir y crear el directorio de destino para los PDFs
     project_dir = Path(__file__).parent.resolve()
     pdf_dir = project_dir / "pdfs"
     pdf_dir.mkdir(exist_ok=True)
 
     current_year = datetime.date.today().year
-    years = range(2017, current_year)
+    
+    # Determinar rango de años según los parámetros provistos
+    if args.year:
+        years = [args.year]
+    elif args.all:
+        years = list(range(2017, current_year))
+    else:
+        # Por defecto, se asume descarga del último año disponible
+        years = [current_year - 1]
 
     # Crear lista de descargas planeadas
     downloads = []
@@ -84,3 +100,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

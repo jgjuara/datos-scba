@@ -1,0 +1,4 @@
+pdfs/*.pdf
+csv/*.csv
+parquet/*.parquet
+xlsx/*.xlsx
