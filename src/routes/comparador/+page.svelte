@@ -181,7 +181,7 @@
 		<div class="glass-panel p-6 rounded-3xl border border-brand-border h-[380px] flex flex-col justify-between lg:col-span-2">
 			<LineChart
 				series={seriesTasaCaducidad}
-				title="Comparativa: Tasa de Caducidad (Proxy de Complejidad Procesal)"
+				title="Comparativa: Tasa de Caducidad"
 				formatY={formatPercent}
 			/>
 		</div>
