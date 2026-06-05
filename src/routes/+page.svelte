@@ -1,12 +1,19 @@
 <script lang="ts">
-	import { db } from '$lib/data/loader.svelte';
-	import { calculateAggregatedMetrics } from '$lib/data/metrics';
-	import type { CalculatedMetrics } from '$lib/data/metrics';
-	import KPI from '$lib/components/KPI.svelte';
-	import Filters from '$lib/components/Filters.svelte';
-	import LineChart from '$lib/charts/LineChart.svelte';
-	import AreaChart from '$lib/charts/AreaChart.svelte';
-	import { Scale, FileText, CheckCircle2, TrendingUp, XSquare, Handshake } from '@lucide/svelte';
+	import { db } from "$lib/data/loader.svelte";
+	import { calculateAggregatedMetrics } from "$lib/data/metrics";
+	import type { CalculatedMetrics } from "$lib/data/metrics";
+	import KPI from "$lib/components/KPI.svelte";
+	import Filters from "$lib/components/Filters.svelte";
+	import LineChart from "$lib/charts/LineChart.svelte";
+	import AreaChart from "$lib/charts/AreaChart.svelte";
+	import {
+		Scale,
+		FileText,
+		CheckCircle2,
+		TrendingUp,
+		XSquare,
+		Handshake,
+	} from "@lucide/svelte";
 
 	// Year filter range bound to Filters
 	let selectedRange = $state<[number, number]>([2017, 2025]);
@@ -20,7 +27,9 @@
 
 	// 1. Data filtered by selected year range (for KPIs)
 	const filteredRecords = $derived.by(() => {
-		return db.records.filter((r) => r.anio >= selectedRange[0] && r.anio <= selectedRange[1]);
+		return db.records.filter(
+			(r) => r.anio >= selectedRange[0] && r.anio <= selectedRange[1],
+		);
 	});
 
 	// Calculated metrics for KPIs
@@ -40,12 +49,12 @@
 	// 2. Data grouped by year for temporal charts
 	const yearlyAggr = $derived.by(() => {
 		const result: Array<{ anio: number; [key: string]: any }> = [];
-		
+
 		for (const anio of db.anios) {
 			if (anio < selectedRange[0] || anio > selectedRange[1]) continue;
 			const yearRecords = db.records.filter((r) => r.anio === anio);
 			if (yearRecords.length === 0) continue;
-			
+
 			let ingresadas = 0;
 			let sentencia = 0;
 			let conciliacion = 0;
@@ -68,7 +77,8 @@
 				totalResueltas += r.totalResueltas;
 			}
 
-			const safeDiv = (num: number, den: number): number => den === 0 ? 0 : num / den;
+			const safeDiv = (num: number, den: number): number =>
+				den === 0 ? 0 : num / den;
 
 			result.push({
 				anio,
@@ -83,50 +93,58 @@
 				Transacción: transaccion,
 				Caducidad: caducidad,
 				Desistimiento: desistimiento,
-				Incompetencia: incompetencia
+				Incompetencia: incompetencia,
 			});
 		}
-		
+
 		return result;
 	});
 
 	// Data mapped specifically for charts
 	const lineSeriesActivity = $derived([
 		{
-			name: 'Ingresadas',
+			name: "Ingresadas",
 			data: yearlyAggr.map((y) => ({ x: y.anio, y: y.ingresadas })),
-			color: 'var(--color-brand-indigo)'
+			color: "var(--color-brand-indigo)",
 		},
 		{
-			name: 'Resueltas',
+			name: "Resueltas",
 			data: yearlyAggr.map((y) => ({ x: y.anio, y: y.resueltas })),
-			color: 'var(--color-brand-success)'
-		}
+			color: "var(--color-brand-success)",
+		},
 	]);
 
 	const lineSeriesTasaResolucion = $derived([
 		{
-			name: 'Tasa de Resolución',
+			name: "Tasa de Resolución",
 			data: yearlyAggr.map((y) => ({ x: y.anio, y: y.tasaResolucion })),
-			color: 'var(--color-brand-indigo)'
-		}
+			color: "var(--color-brand-indigo)",
+		},
 	]);
 
 	// Breakdown config
-	const breakdownKeys = ['Sentencia', 'Conciliación', 'Allanamiento', 'Transacción', 'Caducidad', 'Desistimiento', 'Incompetencia'];
+	const breakdownKeys = [
+		"Sentencia",
+		"Conciliación",
+		"Allanamiento",
+		"Transacción",
+		"Caducidad",
+		"Desistimiento",
+		"Incompetencia",
+	];
 	const breakdownColors = {
-		Sentencia: '#4f46e5',     // Indigo oscuro
-		Conciliación: '#10b981',  // Verde
-		Allanamiento: '#8b5cf6',  // Violeta
-		Transacción: '#06b6d4',   // Cian
-		Caducidad: '#f43f5e',     // Rojo
-		Desistimiento: '#e2e8f0', // Gris claro
-		Incompetencia: '#64748b'  // Gris oscuro
+		Sentencia: "#4f46e5", // Indigo oscuro
+		Conciliación: "#10b981", // Verde
+		Allanamiento: "#8b5cf6", // Violeta
+		Transacción: "#06b6d4", // Cian
+		Caducidad: "#f43f5e", // Rojo
+		Desistimiento: "#e2e8f0", // Gris claro
+		Incompetencia: "#64748b", // Gris oscuro
 	};
 
 	// Formatters
-	const formatInt = (v: number) => v.toLocaleString('es-AR');
-	const formatPercent = (v: number) => (v * 100).toFixed(1) + '%';
+	const formatInt = (v: number) => v.toLocaleString("es-AR");
+	const formatPercent = (v: number) => (v * 100).toFixed(1) + "%";
 
 	// Inline BarChart sizing for Gap
 	let barChartWidth = $state(600);
@@ -134,12 +152,19 @@
 
 <div class="space-y-6">
 	<!-- Top Bar -->
-	<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+	<div
+		class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+	>
 		<div>
-			<h2 class="text-2xl font-bold text-brand-text tracking-tight">Dashboard Provincial</h2>
-			<p class="text-xs text-brand-text-muted mt-1">Análisis descriptivo consolidado de la justicia laboral bonaerense.</p>
+			<h2 class="text-2xl font-bold text-brand-text tracking-tight">
+				Dashboard Provincial
+			</h2>
+			<p class="text-xs text-brand-text-muted mt-1">
+				Análisis descriptivo consolidado de la justicia laboral
+				bonaerense.
+			</p>
 		</div>
-		
+
 		<!-- Filters Component -->
 		<Filters years={db.anios} bind:selectedRange />
 	</div>
@@ -151,18 +176,18 @@
 			value={formatInt(kpis.ingresadas - kpis.resueltas)}
 			icon={Scale}
 			variant="indigo"
-			subtitle="Acumulado del período (cálculo dinámico por período)"
+			subtitle="Ingresadas - resueltas en el período"
 		/>
-		
+
 		<KPI
 			title="Tasa de Resolución"
 			value={formatPercent(lastYearKpis.tasaResolucion)}
 			icon={TrendingUp}
-			variant={lastYearKpis.tasaResolucion >= 1.0 ? 'success' : 'warning'}
+			variant={lastYearKpis.tasaResolucion >= 1.0 ? "success" : "warning"}
 			trend={{
 				value: formatPercent(lastYearKpis.tasaResolucion),
-				direction: lastYearKpis.tasaResolucion >= 1.0 ? 'up' : 'down',
-				label: `Último año (${lastYear})`
+				direction: lastYearKpis.tasaResolucion >= 1.0 ? "up" : "down",
+				label: `Último año (${lastYear})`,
 			}}
 		/>
 
@@ -186,37 +211,19 @@
 			title="Tasa de Caducidad"
 			value={formatPercent(lastYearKpis.tasaCaducidad)}
 			icon={XSquare}
-			variant={lastYearKpis.tasaCaducidad > 0.1 ? 'danger' : 'default'}
+			variant={lastYearKpis.tasaCaducidad > 0.1 ? "danger" : "default"}
 			subtitle={`Caducidad / Resueltas (Último año: ${lastYear})`}
 		/>
 	</div>
 
 	<!-- Row 1: Line Charts -->
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-		<div class="glass-panel p-6 rounded-3xl border border-brand-border h-[400px] flex flex-col justify-between">
+		<div
+			class="glass-panel p-6 rounded-3xl border border-brand-border h-[400px] flex flex-col justify-between"
+		>
 			<LineChart
 				series={lineSeriesActivity}
 				title="Evolución Temporal: Causas Ingresadas vs Resueltas"
-			/>
-		</div>
-
-		<div class="glass-panel p-6 rounded-3xl border border-brand-border h-[400px] flex flex-col justify-between">
-			<LineChart
-				series={lineSeriesTasaResolucion}
-				title="Evolución de la Tasa de Resolución"
-				formatY={formatPercent}
-			/>
-		</div>
-	</div>
-
-	<!-- Row 2: Composition & Gap -->
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-		<div class="glass-panel p-6 rounded-3xl border border-brand-border h-[400px] flex flex-col justify-between">
-			<AreaChart
-				data={yearlyAggr}
-				keys={breakdownKeys}
-				colors={breakdownColors}
-				title="Composición Histórica de Resoluciones (Modos de Cierre)"
 			/>
 		</div>
 
@@ -226,15 +233,25 @@
 			bind:clientWidth={barChartWidth}
 		>
 			<div class="px-2">
-				<h5 class="text-sm font-bold text-brand-text">Brecha Anual (Ingresadas - Resueltas)</h5>
-				<p class="text-[10px] text-brand-text-muted mt-1 leading-normal">
-					Valores positivos (rojo) representan acumulación neta de expedientes. Valores negativos (verde) indican resolución mayor al ingreso.
+				<h5 class="text-sm font-bold text-brand-text">
+					Brecha Anual (Ingresadas - Resueltas)
+				</h5>
+				<p
+					class="text-[10px] text-brand-text-muted mt-1 leading-normal"
+				>
+					Valores positivos (rojo) representan acumulación neta de
+					expedientes. Valores negativos (verde) indican resolución
+					mayor al ingreso.
 				</p>
 			</div>
 
 			<div class="flex-1 mt-4 select-none relative">
 				{#if yearlyAggr.length > 0}
-					{@const maxGap = Math.max(...yearlyAggr.map(y => Math.abs(y.brechaAnual))) || 1000}
+					{@const vals = yearlyAggr.map((y) => y.brechaAnual)}
+					{@const rawMax = Math.max(...vals, 0)}
+					{@const rawMin = Math.min(...vals, 0)}
+					{@const maxVal = rawMax === 0 && rawMin === 0 ? 1000 : rawMax}
+					{@const minVal = rawMax === 0 && rawMin === 0 ? -1000 : rawMin}
 					{@const height = 240}
 					{@const paddingY = 20}
 					{@const chartH = height - paddingY * 2}
@@ -243,11 +260,16 @@
 						const step = (barChartWidth - 110) / yearlyAggr.length;
 						return 70 + index * step;
 					}}
+					{@const gapToY = (val: number) =>
+						paddingY + (1 - (val - minVal) / (maxVal - minVal)) * chartH}
 					<!-- Zero Y line coordinate -->
-					{@const zeroY = paddingY + chartH / 2}
-					{@const gapToY = (val: number) => zeroY - (val / maxGap) * (chartH / 2)}
+					{@const zeroY = gapToY(0)}
 
-					<svg width={barChartWidth - 30} {height} class="overflow-visible">
+					<svg
+						width={barChartWidth - 30}
+						{height}
+						class="overflow-visible"
+					>
 						<!-- Horizontal line at zero -->
 						<line
 							x1="60"
@@ -257,44 +279,14 @@
 							stroke="var(--color-brand-border)"
 							stroke-width="1.5"
 						/>
-						
-						<!-- Gridlines at extremes -->
-						<line
-							x1="60"
-							y1={paddingY}
-							x2={barChartWidth - 50}
-							y2={paddingY}
-							stroke="var(--color-brand-border)"
-							stroke-width="0.75"
-							stroke-dasharray="2 2"
-						/>
-						<text x="50" y={paddingY + 4} text-anchor="end" class="text-[9px] fill-brand-text-muted font-mono font-bold">
-							+{formatInt(maxGap)}
-						</text>
-						
-						<line
-							x1="60"
-							y1={height - paddingY}
-							x2={barChartWidth - 50}
-							y2={height - paddingY}
-							stroke="var(--color-brand-border)"
-							stroke-width="0.75"
-							stroke-dasharray="2 2"
-						/>
-						<text x="50" y={height - paddingY + 4} text-anchor="end" class="text-[9px] fill-brand-text-muted font-mono font-bold">
-							-{formatInt(maxGap)}
-						</text>
-						<text x="50" y={zeroY + 3} text-anchor="end" class="text-[9px] fill-brand-text-muted font-mono font-bold">
-							0
-						</text>
 
 						<!-- Render Bars -->
 						{#each yearlyAggr as y, i}
 							{@const barX = xScaleBar(i)}
 							{@const barY = gapToY(y.brechaAnual)}
-							{@const barH = Math.abs(y.brechaAnual / maxGap) * (chartH / 2)}
+							{@const barH = Math.abs(barY - zeroY)}
 							{@const isAccumulation = y.brechaAnual > 0}
-							
+
 							<!-- Rect bar -->
 							<rect
 								x={barX - 12}
@@ -302,11 +294,13 @@
 								width="24"
 								height={Math.max(2, barH)}
 								rx="3"
-								fill={isAccumulation ? 'var(--color-brand-danger)' : 'var(--color-brand-success)'}
+								fill={isAccumulation
+									? "var(--color-brand-danger)"
+									: "var(--color-brand-success)"}
 								opacity="0.7"
 								class="hover:opacity-100 transition cursor-pointer"
 							/>
-							
+
 							<!-- Year Label -->
 							<text
 								x={barX}
@@ -322,14 +316,42 @@
 								x={barX}
 								y={isAccumulation ? barY - 6 : barY + 14}
 								text-anchor="middle"
-								class="text-[9px] font-mono font-bold {isAccumulation ? 'fill-brand-danger' : 'fill-brand-success'}"
+								class="text-[9px] font-mono font-bold {isAccumulation
+									? 'fill-brand-danger'
+									: 'fill-brand-success'}"
 							>
-								{y.brechaAnual > 0 ? '+' : ''}{formatInt(y.brechaAnual)}
+								{y.brechaAnual > 0 ? "+" : ""}{formatInt(
+									y.brechaAnual,
+								)}
 							</text>
 						{/each}
 					</svg>
 				{/if}
 			</div>
+		</div>
+	</div>
+
+	<!-- Row 2: Composition & Gap -->
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+		<div
+			class="glass-panel p-6 rounded-3xl border border-brand-border h-[400px] flex flex-col justify-between"
+		>
+			<AreaChart
+				data={yearlyAggr}
+				keys={breakdownKeys}
+				colors={breakdownColors}
+				title="Composición Histórica de Resoluciones (Modos de Cierre)"
+			/>
+		</div>
+
+		<div
+			class="glass-panel p-6 rounded-3xl border border-brand-border h-[400px] flex flex-col justify-between"
+		>
+			<LineChart
+				series={lineSeriesTasaResolucion}
+				title="Evolución de la Tasa de Resolución"
+				formatY={formatPercent}
+			/>
 		</div>
 	</div>
 </div>
