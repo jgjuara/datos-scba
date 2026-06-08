@@ -7,6 +7,7 @@
 	import KPI from '$lib/components/KPI.svelte';
 	import Filters from '$lib/components/Filters.svelte';
 	import LineChart from '$lib/charts/LineChart.svelte';
+	import AreaChart from '$lib/charts/AreaChart.svelte';
 	import SearchableSelect from '$lib/components/SearchableSelect.svelte';
 	import {
 		Building2,
@@ -117,12 +118,12 @@
 		{
 			name: 'Ingresadas (Sede)',
 			data: annualPerformance.map((a) => ({ x: a.anio, y: a.record.ingresadas })),
-			color: 'var(--color-brand-indigo)'
+			color: 'var(--color-brand-laboral)'
 		},
 		{
 			name: 'Resueltas (Sede)',
 			data: annualPerformance.map((a) => ({ x: a.anio, y: a.record.totalResueltas })),
-			color: 'var(--color-brand-success)'
+			color: 'var(--color-brand-laboral)'
 		}
 	]);
 
@@ -130,7 +131,7 @@
 		{
 			name: 'Sede',
 			data: annualPerformance.map((a) => ({ x: a.anio, y: a.metrics.tasaResolucion })),
-			color: 'var(--color-brand-indigo)'
+			color: 'var(--color-brand-laboral)'
 		},
 		{
 			name: 'Provincia',
@@ -138,7 +139,7 @@
 				x: a.anio,
 				y: provincialAnnualPerformance.get(a.anio)?.tasaResolucion ?? 0
 			})),
-			color: 'var(--color-brand-muted)'
+			color: 'var(--color-brand-indigo)'
 		}
 	]);
 
@@ -146,7 +147,7 @@
 		{
 			name: 'Sede',
 			data: annualPerformance.map((a) => ({ x: a.anio, y: a.metrics.tasaSentencia })),
-			color: 'var(--color-brand-success)'
+			color: 'var(--color-brand-laboral)'
 		},
 		{
 			name: 'Provincia',
@@ -154,7 +155,7 @@
 				x: a.anio,
 				y: provincialAnnualPerformance.get(a.anio)?.tasaSentencia ?? 0
 			})),
-			color: 'var(--color-brand-muted)'
+			color: 'var(--color-brand-indigo)'
 		}
 	]);
 
@@ -162,7 +163,7 @@
 		{
 			name: 'Sede',
 			data: annualPerformance.map((a) => ({ x: a.anio, y: a.metrics.tasaCaducidad })),
-			color: 'var(--color-brand-danger)'
+			color: 'var(--color-brand-laboral)'
 		},
 		{
 			name: 'Provincia',
@@ -170,9 +171,45 @@
 				x: a.anio,
 				y: provincialAnnualPerformance.get(a.anio)?.tasaCaducidad ?? 0
 			})),
-			color: 'var(--color-brand-muted)'
+			color: 'var(--color-brand-indigo)'
 		}
 	]);
+
+	// Breakdown config
+	const breakdownKeys = [
+		'Sentencia',
+		'Conciliación',
+		'Allanamiento',
+		'Transacción',
+		'Caducidad',
+		'Desistimiento',
+		'Interlocutorios',
+		'Incompetencia'
+	];
+	const breakdownColors = {
+		Sentencia: '#4f46e5',
+		Conciliación: '#10b981',
+		Allanamiento: '#8b5cf6',
+		Transacción: '#06b6d4',
+		Caducidad: '#f43f5e',
+		Desistimiento: '#e2e8f0',
+		Interlocutorios: '#f59e0b',
+		Incompetencia: '#64748b'
+	};
+
+	const seatResolutionBreakdown = $derived(
+		annualPerformance.map((a) => ({
+			anio: a.anio,
+			Sentencia: a.record.sentencia,
+			Conciliación: a.record.conciliacion,
+			Allanamiento: a.record.allanamiento,
+			Transacción: a.record.transaccion,
+			Caducidad: a.record.caducidad,
+			Desistimiento: a.record.desistimiento,
+			Interlocutorios: a.record.interlocutorios,
+			Incompetencia: a.record.incompetencia
+		}))
+	);
 
 	// Benchmarks
 	const resDiff = $derived(seatMetricsAcc.tasaResolucion - provincialMetricsAcc.tasaResolucion);
@@ -385,6 +422,16 @@
 					series={lineSeriesTasaCaducidad}
 					title="Comparativa Temporal: Tasa de Caducidad (Sede vs Provincia)"
 					formatY={formatPercent}
+				/>
+			</div>
+
+			<!-- Chart 5: Resolution Type Composition -->
+			<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[400px] flex flex-col justify-between">
+				<AreaChart
+					data={seatResolutionBreakdown}
+					keys={breakdownKeys}
+					colors={breakdownColors}
+					title="Composición Histórica de Resoluciones (Modos de Cierre)"
 				/>
 			</div>
 		</div>
