@@ -126,6 +126,7 @@
 			Transacción: r.transaccion,
 			Caducidad: r.caducidad,
 			Desistimiento: r.desistimiento,
+			Interlocutorios: r.interlocutorios,
 			Incompetencia: r.incompetencia
 		}));
 	});
@@ -143,6 +144,65 @@
 			color: "var(--color-brand-success)",
 		},
 	]);
+
+	// Data grouped by year and fuero for stacked charts
+	const yearlyByFuero = $derived.by(() => {
+		const groups: {
+			[anio: number]: {
+				anio: number;
+				ingresadasCivil: number;
+				resueltasCivil: number;
+				brechaCivil: number;
+				ingresadasTrabajo: number;
+				resueltasTrabajo: number;
+				brechaTrabajo: number;
+			};
+		} = {};
+
+		const filtered = db.consolidatedRecords.filter(
+			(r) => r.anio >= selectedRange[0] && r.anio <= selectedRange[1]
+		);
+
+		for (const r of filtered) {
+			const anio = r.anio;
+			if (!groups[anio]) {
+				groups[anio] = {
+					anio,
+					ingresadasCivil: 0,
+					resueltasCivil: 0,
+					brechaCivil: 0,
+					ingresadasTrabajo: 0,
+					resueltasTrabajo: 0,
+					brechaTrabajo: 0
+				};
+			}
+
+			const group = groups[anio];
+			const valor = r.valor;
+
+			if (r.fuero === 'civil') {
+				if (r.tipo === 'Ingresadas') {
+					group.ingresadasCivil += valor;
+				} else if (r.tipo === 'Total Resueltas') {
+					group.resueltasCivil += valor;
+				}
+			} else if (r.fuero === 'trabajo') {
+				if (r.tipo === 'Ingresadas') {
+					group.ingresadasTrabajo += valor;
+				} else if (r.tipo === 'Total Resueltas') {
+					group.resueltasTrabajo += valor;
+				}
+			}
+		}
+
+		for (const anio in groups) {
+			const g = groups[anio];
+			g.brechaCivil = g.ingresadasCivil - g.resueltasCivil;
+			g.brechaTrabajo = g.ingresadasTrabajo - g.resueltasTrabajo;
+		}
+
+		return Object.values(groups).sort((a, b) => a.anio - b.anio);
+	});
 
 	const lineSeriesTasaResolucion = $derived([
 		{
@@ -175,6 +235,7 @@
 		"Transacción",
 		"Caducidad",
 		"Desistimiento",
+		"Interlocutorios",
 		"Incompetencia",
 	];
 	const breakdownColors = {
@@ -184,6 +245,7 @@
 		Transacción: "#06b6d4",
 		Caducidad: "#f43f5e",
 		Desistimiento: "#e2e8f0",
+		Interlocutorios: "#f59e0b",
 		Incompetencia: "#64748b",
 	};
 
@@ -273,6 +335,7 @@
 			Transacción: r.transaccion,
 			Caducidad: r.caducidad,
 			Desistimiento: r.desistimiento,
+			Interlocutorios: r.interlocutorios,
 			Incompetencia: r.incompetencia
 		}));
 	});
@@ -280,65 +343,6 @@
 	// Formatters
 	const formatInt = (v: number) => v.toLocaleString("es-AR");
 	const formatPercent = (v: number) => (v * 100).toFixed(1) + "%";
-
-	// Data grouped by year and fuero for stacked charts
-	const yearlyByFuero = $derived.by(() => {
-		const groups: {
-			[anio: number]: {
-				anio: number;
-				ingresadasCivil: number;
-				resueltasCivil: number;
-				brechaCivil: number;
-				ingresadasTrabajo: number;
-				resueltasTrabajo: number;
-				brechaTrabajo: number;
-			};
-		} = {};
-
-		const filtered = db.consolidatedRecords.filter(
-			(r) => r.anio >= selectedRange[0] && r.anio <= selectedRange[1]
-		);
-
-		for (const r of filtered) {
-			const anio = r.anio;
-			if (!groups[anio]) {
-				groups[anio] = {
-					anio,
-					ingresadasCivil: 0,
-					resueltasCivil: 0,
-					brechaCivil: 0,
-					ingresadasTrabajo: 0,
-					resueltasTrabajo: 0,
-					brechaTrabajo: 0
-				};
-			}
-
-			const group = groups[anio];
-			const valor = r.valor;
-
-			if (r.fuero === 'civil') {
-				if (r.tipo === 'Ingresadas') {
-					group.ingresadasCivil += valor;
-				} else if (r.tipo === 'Total Resueltas') {
-					group.resueltasCivil += valor;
-				}
-			} else if (r.fuero === 'trabajo') {
-				if (r.tipo === 'Ingresadas') {
-					group.ingresadasTrabajo += valor;
-				} else if (r.tipo === 'Total Resueltas') {
-					group.resueltasTrabajo += valor;
-				}
-			}
-		}
-
-		for (const anio in groups) {
-			const g = groups[anio];
-			g.brechaCivil = g.ingresadasCivil - g.resueltasCivil;
-			g.brechaTrabajo = g.ingresadasTrabajo - g.resueltasTrabajo;
-		}
-
-		return Object.values(groups).sort((a, b) => a.anio - b.anio);
-	});
 
 	const ingresadasByFueroData = $derived(
 		yearlyByFuero.map((y) => ({
@@ -538,6 +542,8 @@
 					<svg
 						width={barChartWidth - 30}
 						{height}
+						role="img"
+						aria-label="Brecha anual por fuero"
 						class="overflow-visible cursor-crosshair"
 						onmousemove={handleBarMouseMove}
 						onmouseleave={handleBarMouseLeave}
@@ -566,7 +572,7 @@
 						{/if}
 
 						<!-- Render Bars -->
-						{#each yearlyByFuero as y, i}
+						{#each yearlyByFuero as y, i (y.anio)}
 							{@const barX = xScaleBar(i)}
 							{@const civilH = (y.brechaCivil / (maxVal - minVal)) * chartH}
 							{@const trabajoH = (y.brechaTrabajo / (maxVal - minVal)) * chartH}

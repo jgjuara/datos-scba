@@ -62,6 +62,7 @@
 			let transaccion = 0;
 			let caducidad = 0;
 			let desistimiento = 0;
+			let interlocutorios = 0;
 			let incompetencia = 0;
 			let totalResueltas = 0;
 
@@ -73,6 +74,7 @@
 				transaccion += r.transaccion;
 				caducidad += r.caducidad;
 				desistimiento += r.desistimiento;
+				interlocutorios += r.interlocutorios;
 				incompetencia += r.incompetencia;
 				totalResueltas += r.totalResueltas;
 			}
@@ -93,6 +95,7 @@
 				Transacción: transaccion,
 				Caducidad: caducidad,
 				Desistimiento: desistimiento,
+				Interlocutorios: interlocutorios,
 				Incompetencia: incompetencia,
 			});
 		}
@@ -130,6 +133,7 @@
 		"Transacción",
 		"Caducidad",
 		"Desistimiento",
+		"Interlocutorios",
 		"Incompetencia",
 	];
 	const breakdownColors = {
@@ -139,6 +143,7 @@
 		Transacción: "#06b6d4", // Cian
 		Caducidad: "#f43f5e", // Rojo
 		Desistimiento: "#e2e8f0", // Gris claro
+		Interlocutorios: "#f59e0b", // Ámbar
 		Incompetencia: "#64748b", // Gris oscuro
 	};
 

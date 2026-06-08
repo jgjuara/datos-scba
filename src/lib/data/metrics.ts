@@ -1,4 +1,4 @@
-import type { CourtRecord } from './loader';
+import type { CourtRecord } from './loader.svelte';
 
 export interface CalculatedMetrics {
 	ingresadas: number;

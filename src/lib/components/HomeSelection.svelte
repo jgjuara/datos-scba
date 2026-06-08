@@ -86,6 +86,7 @@
 			Transacción: r.transaccion,
 			Caducidad: r.caducidad,
 			Desistimiento: r.desistimiento,
+			Interlocutorios: r.interlocutorios,
 			Incompetencia: r.incompetencia
 		}));
 	});
@@ -111,6 +112,7 @@
 		"Transacción",
 		"Caducidad",
 		"Desistimiento",
+		"Interlocutorios",
 		"Incompetencia",
 	];
 	const breakdownColors = {
@@ -120,6 +122,7 @@
 		Transacción: "#06b6d4",
 		Caducidad: "#f43f5e",
 		Desistimiento: "#e2e8f0",
+		Interlocutorios: "#f59e0b",
 		Incompetencia: "#64748b",
 	};
 
@@ -206,6 +209,7 @@
 			Transacción: r.transaccion,
 			Caducidad: r.caducidad,
 			Desistimiento: r.desistimiento,
+			Interlocutorios: r.interlocutorios,
 			Incompetencia: r.incompetencia
 		}));
 	});

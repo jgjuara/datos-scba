@@ -35,10 +35,15 @@ jobs:
       - name: Run data pipeline
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.pipeline_args }}" ]; then
-            uv run main.py ${{ github.event.inputs.pipeline_args }}
+            uv run python main.py ${{ github.event.inputs.pipeline_args }}
           else
-            uv run main.py
+            uv run python main.py
           fi
+
+      - name: Validate tribunales por sede output
+        run: |
+          test -s static/data/tribunales_por_sede.csv
+          head -n 1 static/data/tribunales_por_sede.csv | grep -Fx "anio,sede,cant_tribunales"
 
       - name: Commit and push updated data
         uses: stefanzweifel/git-auto-commit-action@v5

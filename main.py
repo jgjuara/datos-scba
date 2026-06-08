@@ -43,7 +43,8 @@ def main() -> None:
         "export_all_to_csv.py",
         "unify_data.py",
         "aggregate_data.py",
-        "export_parquet_to_csv.py"
+        "export_parquet_to_csv.py",
+        "export_tribunales_por_sede.py"
     ]
 
     # Determinar qué argumentos propagar a cada paso
@@ -74,5 +75,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
 
