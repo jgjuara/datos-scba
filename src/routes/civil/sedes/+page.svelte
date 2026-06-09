@@ -169,44 +169,57 @@
 		}))
 	);
 
-	const seatColorObject = $derived.by(() => {
+	const allSedesColorObject = $derived.by(() => {
 		const obj: { [key: string]: string } = {};
-		selectedSeats.forEach((seat) => {
-			obj[seat] = seatColorMap.get(seat) || '#ccc';
+		const palette = [
+			'#4338ca', '#0f5132', '#78350f', '#991b1b', '#9d174d', '#581c87',
+			'#2563eb', '#16a34a', '#ca8a04', '#dc2626', '#db2777', '#7c3aed',
+			'#0284c7', '#0d9488', '#ea580c', '#e11d48', '#4b5563', '#0891b2'
+		];
+		db.sedes.forEach((seat, index) => {
+			obj[seat] = palette[index % palette.length];
 		});
 		return obj;
 	});
 
-	// Generate data for AreaChart of selected seats: Ingresadas
-	const areaDataIngresadas = $derived.by(() => {
+	// Generate data for AreaChart of all seats: Ingresadas
+	const areaDataIngresadasAll = $derived.by(() => {
 		const list: Array<{ anio: number; [key: string]: number }> = [];
 		const minYear = selectedRange[0];
 		const maxYear = selectedRange[1];
 
 		for (let yr = minYear; yr <= maxYear; yr++) {
 			const row: { anio: number; [key: string]: number } = { anio: yr };
-			selectedSeats.forEach((seat) => {
-				const seatData = performanceBySeatAndYear.get(seat) || [];
-				const yearData = seatData.find((p) => p.anio === yr);
-				row[seat] = yearData ? yearData.ingresadas : 0;
+			db.sedes.forEach((seat) => {
+				row[seat] = 0;
+			});
+			const yearRecs = db.records.filter((r) => r.anio === yr);
+			yearRecs.forEach((r) => {
+				if (row[r.sede] !== undefined) {
+					row[r.sede] += r.ingresadas;
+				}
 			});
 			list.push(row);
 		}
 		return list;
 	});
 
-	// Generate data for AreaChart of selected seats: Resueltas
-	const areaDataResueltas = $derived.by(() => {
+	// Generate data for AreaChart of all seats: Resueltas
+	const areaDataResueltasAll = $derived.by(() => {
 		const list: Array<{ anio: number; [key: string]: number }> = [];
 		const minYear = selectedRange[0];
 		const maxYear = selectedRange[1];
 
 		for (let yr = minYear; yr <= maxYear; yr++) {
 			const row: { anio: number; [key: string]: number } = { anio: yr };
-			selectedSeats.forEach((seat) => {
-				const seatData = performanceBySeatAndYear.get(seat) || [];
-				const yearData = seatData.find((p) => p.anio === yr);
-				row[seat] = yearData ? yearData.resueltas : 0;
+			db.sedes.forEach((seat) => {
+				row[seat] = 0;
+			});
+			const yearRecs = db.records.filter((r) => r.anio === yr);
+			yearRecs.forEach((r) => {
+				if (row[r.sede] !== undefined) {
+					row[r.sede] += r.totalResueltas;
+				}
 			});
 			list.push(row);
 		}
@@ -246,15 +259,15 @@
 	<div class="space-y-4">
 		<div>
 			<h3 class="text-lg font-bold text-brand-text">Distribución Acumulada de Causas por Sede</h3>
-			<p class="text-xs text-brand-text-muted mt-1">Evolución de la carga ingresada y resuelta acumulada para las sedes seleccionadas.</p>
+			<p class="text-xs text-brand-text-muted mt-1">Evolución de la carga ingresada y resuelta acumulada para la totalidad de las sedes.</p>
 		</div>
 
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 			<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[380px] flex flex-col justify-between">
 				<AreaChart
-					data={areaDataIngresadas}
-					keys={selectedSeats}
-					colors={seatColorObject}
+					data={areaDataIngresadasAll}
+					keys={db.sedes}
+					colors={allSedesColorObject}
 					title="Causas Ingresadas por Sede (Acumulado)"
 					formatY={formatInt}
 				/>
@@ -262,9 +275,9 @@
 
 			<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[380px] flex flex-col justify-between">
 				<AreaChart
-					data={areaDataResueltas}
-					keys={selectedSeats}
-					colors={seatColorObject}
+					data={areaDataResueltasAll}
+					keys={db.sedes}
+					colors={allSedesColorObject}
 					title="Causas Resueltas por Sede (Acumulado)"
 					formatY={formatInt}
 				/>
