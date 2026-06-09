@@ -8,6 +8,7 @@
 	import ScatterChart from '$lib/charts/ScatterChart.svelte';
 	import type { ScatterPoint } from '$lib/charts/ScatterChart.svelte';
 	import LineChart from '$lib/charts/LineChart.svelte';
+	import AreaChart from '$lib/charts/AreaChart.svelte';
 	import SearchableMultiSelect from '$lib/components/SearchableMultiSelect.svelte';
 	import { TrendingUp, FileText, XSquare, AlertCircle, Plus, Check, X } from '@lucide/svelte';
 
@@ -168,6 +169,50 @@
 		}))
 	);
 
+	const seatColorObject = $derived.by(() => {
+		const obj: { [key: string]: string } = {};
+		selectedSeats.forEach((seat) => {
+			obj[seat] = seatColorMap.get(seat) || '#ccc';
+		});
+		return obj;
+	});
+
+	// Generate data for AreaChart of selected seats: Ingresadas
+	const areaDataIngresadas = $derived.by(() => {
+		const list: Array<{ anio: number; [key: string]: number }> = [];
+		const minYear = selectedRange[0];
+		const maxYear = selectedRange[1];
+
+		for (let yr = minYear; yr <= maxYear; yr++) {
+			const row: { anio: number; [key: string]: number } = { anio: yr };
+			selectedSeats.forEach((seat) => {
+				const seatData = performanceBySeatAndYear.get(seat) || [];
+				const yearData = seatData.find((p) => p.anio === yr);
+				row[seat] = yearData ? yearData.ingresadas : 0;
+			});
+			list.push(row);
+		}
+		return list;
+	});
+
+	// Generate data for AreaChart of selected seats: Resueltas
+	const areaDataResueltas = $derived.by(() => {
+		const list: Array<{ anio: number; [key: string]: number }> = [];
+		const minYear = selectedRange[0];
+		const maxYear = selectedRange[1];
+
+		for (let yr = minYear; yr <= maxYear; yr++) {
+			const row: { anio: number; [key: string]: number } = { anio: yr };
+			selectedSeats.forEach((seat) => {
+				const seatData = performanceBySeatAndYear.get(seat) || [];
+				const yearData = seatData.find((p) => p.anio === yr);
+				row[seat] = yearData ? yearData.resueltas : 0;
+			});
+			list.push(row);
+		}
+		return list;
+	});
+
 	const formatPercent = (v: number) => (v * 100).toFixed(1) + '%';
 	const formatInt = (v: number) => v.toLocaleString('es-AR');
 </script>
@@ -194,6 +239,36 @@
 				yLabel="Tasa de Resolución"
 				formatY={formatPercent}
 			/>
+		</div>
+	</div>
+
+	<!-- Stacked Area Charts Section -->
+	<div class="space-y-4">
+		<div>
+			<h3 class="text-lg font-bold text-brand-text">Distribución Acumulada de Causas por Sede</h3>
+			<p class="text-xs text-brand-text-muted mt-1">Evolución de la carga ingresada y resuelta acumulada para las sedes seleccionadas.</p>
+		</div>
+
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+			<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[380px] flex flex-col justify-between">
+				<AreaChart
+					data={areaDataIngresadas}
+					keys={selectedSeats}
+					colors={seatColorObject}
+					title="Causas Ingresadas por Sede (Acumulado)"
+					formatY={formatInt}
+				/>
+			</div>
+
+			<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[380px] flex flex-col justify-between">
+				<AreaChart
+					data={areaDataResueltas}
+					keys={selectedSeats}
+					colors={seatColorObject}
+					title="Causas Resueltas por Sede (Acumulado)"
+					formatY={formatInt}
+				/>
+			</div>
 		</div>
 	</div>
 
