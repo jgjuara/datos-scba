@@ -2,6 +2,7 @@
 	import { untrack } from 'svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { db } from '$lib/data/loader.svelte';
 	import { calculateMetrics, calculateAggregatedMetrics } from '$lib/data/metrics';
 	import KPI from '$lib/components/KPI.svelte';
@@ -29,13 +30,11 @@
 		untrack(() => {
 			const currentId = $page.url.searchParams.get('id') || '';
 			if (currentSede !== currentId) {
-				const url = new URL($page.url);
-				if (currentSede) {
-					url.searchParams.set('id', currentSede);
-				} else {
-					url.searchParams.delete('id');
-				}
-				goto(url.pathname + url.search, {
+				goto(resolve(
+					currentSede
+						? `/trabajo/sede?id=${encodeURIComponent(currentSede)}`
+						: '/trabajo/sede'
+				), {
 					keepFocus: true,
 					replaceState: true,
 					noScroll: true
@@ -229,9 +228,9 @@
 				<Building2 class="w-6 h-6" />
 			</div>
 			<div>
-				<h2 class="text-2xl font-bold text-brand-text tracking-tight">Detalle por Sede Judicial - Trabajo</h2>
+				<h2 class="text-2xl font-bold text-brand-text tracking-tight">Detalle de sede - Trabajo</h2>
 				<p class="text-xs text-brand-text-muted mt-1">
-					Historial y comparativa detallada de rendimiento procesal por sede.
+					Evolución anual, composición de resoluciones y comparación contra el promedio provincial.
 				</p>
 			</div>
 		</div>
@@ -244,7 +243,7 @@
 	<div class="glass-panel p-5 rounded-2xl border border-brand-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 		<div class="space-y-1">
 			<h4 class="text-xs font-bold text-brand-text uppercase tracking-wider">Selección de Sede</h4>
-			<p class="text-[11px] text-brand-text-muted">Elige una sede para analizar sus indicadores.</p>
+			<p class="text-[11px] text-brand-text-muted">Elija una sede para analizar sus indicadores.</p>
 		</div>
 
 		<!-- Custom Searchable Select -->
@@ -259,7 +258,7 @@
 			</div>
 			<h3 class="text-base font-bold text-brand-text">Ninguna sede seleccionada</h3>
 			<p class="text-xs text-brand-text-muted mt-2 max-w-sm">
-				Utiliza el buscador superior para seleccionar una sede judicial y visualizar sus estadísticas detalladas.
+				Seleccione una sede judicial con el buscador superior para ver su serie histórica e indicadores.
 			</p>
 		</div>
 	{:else if !seatExists}
@@ -394,7 +393,7 @@
 			<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[380px] flex flex-col justify-between">
 				<LineChart
 					series={lineSeriesActivity}
-					title="Evolución Temporal de Carga de Trabajo (Ingresos vs Resueltas)"
+					title="Evolución anual de ingresos y resoluciones"
 				/>
 			</div>
 
@@ -402,7 +401,7 @@
 			<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[380px] flex flex-col justify-between">
 				<LineChart
 					series={lineSeriesTasaResolucion}
-					title="Comparativa Temporal: Tasa de Resolución (Sede vs Provincia)"
+					title="Tasa de resolución: sede vs provincia"
 					formatY={formatPercent}
 				/>
 			</div>
@@ -411,7 +410,7 @@
 			<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[380px] flex flex-col justify-between">
 				<LineChart
 					series={lineSeriesTasaSentencia}
-					title="Comparativa Temporal: Tasa de Sentencia (Sede vs Provincia)"
+					title="Tasa de sentencia: sede vs provincia"
 					formatY={formatPercent}
 				/>
 			</div>
@@ -420,7 +419,7 @@
 			<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[380px] flex flex-col justify-between">
 				<LineChart
 					series={lineSeriesTasaCaducidad}
-					title="Comparativa Temporal: Tasa de Caducidad (Sede vs Provincia)"
+					title="Tasa de caducidad: sede vs provincia"
 					formatY={formatPercent}
 				/>
 			</div>
@@ -431,7 +430,7 @@
 					data={seatResolutionBreakdown}
 					keys={breakdownKeys}
 					colors={breakdownColors}
-					title="Composición Histórica de Resoluciones (Modos de Cierre)"
+					title="Composición histórica de resoluciones"
 				/>
 			</div>
 		</div>

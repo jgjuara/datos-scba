@@ -162,11 +162,10 @@
 	>
 		<div>
 			<h2 class="text-2xl font-bold text-brand-text tracking-tight">
-				Dashboard Provincial - Civil y Comercial
+				Actividad provincial - Civil y Comercial
 			</h2>
 			<p class="text-xs text-brand-text-muted mt-1">
-				Análisis descriptivo consolidado de la justicia civil y comercial
-				bonaerense.
+				Seguimiento de ingresos, resoluciones y formas de cierre en juzgados civiles y comerciales bonaerenses.
 			</p>
 		</div>
 
@@ -181,7 +180,7 @@
 			value={formatInt(kpis.ingresadas - kpis.resueltas)}
 			icon={Scale}
 			variant="indigo"
-			subtitle="Ingresadas - resueltas en el período"
+			subtitle="Ingresadas menos resueltas en el período"
 		/>
 
 		<KPI
@@ -239,14 +238,12 @@
 		>
 			<div class="px-2">
 				<h5 class="text-sm font-bold text-brand-text">
-					Brecha Anual (Ingresadas - Resueltas)
+					Brecha anual
 				</h5>
 				<p
 					class="text-[10px] text-brand-text-muted mt-1 leading-normal"
 				>
-					Valores positivos (rojo) representan acumulación neta de
-					expedientes. Valores negativos (verde) indican resolución
-					mayor al ingreso.
+					Diferencia entre causas ingresadas y resueltas. El rojo indica acumulación neta; el verde, resoluciones por encima de los ingresos.
 				</p>
 			</div>
 
@@ -286,7 +283,7 @@
 						/>
 
 						<!-- Render Bars -->
-						{#each yearlyAggr as y, i}
+						{#each yearlyAggr as y, i (y.anio)}
 							{@const barX = xScaleBar(i)}
 							{@const barY = gapToY(y.brechaAnual)}
 							{@const barH = Math.abs(barY - zeroY)}
@@ -345,7 +342,7 @@
 				data={yearlyAggr}
 				keys={breakdownKeys}
 				colors={breakdownColors}
-				title="Composición Histórica de Resoluciones (Modos de Cierre)"
+				title="Composición histórica de resoluciones"
 			/>
 		</div>
 

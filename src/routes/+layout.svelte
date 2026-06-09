@@ -1,9 +1,13 @@
 <script lang="ts">
 	import { untrack } from "svelte";
 	import { page } from "$app/stores"; // SvelteKit store page
-	import { base } from "$app/paths";
+	import { base, resolve } from "$app/paths";
 	import { goto } from "$app/navigation";
-	import { loadDataset, loadConsolidatedDataset, db } from "$lib/data/loader.svelte";
+	import {
+		loadDataset,
+		loadConsolidatedDataset,
+		db,
+	} from "$lib/data/loader.svelte";
 	import {
 		LayoutDashboard,
 		Building2,
@@ -21,11 +25,11 @@
 		const pathname = $page.url.pathname;
 		// Clean pathname comparisons accounting for potential trailing slashes and base path
 		const relativePath = base ? pathname.substring(base.length) : pathname;
-		if (relativePath.startsWith('/trabajo')) {
-			return 'trabajo';
+		if (relativePath.startsWith("/trabajo")) {
+			return "trabajo";
 		}
-		if (relativePath.startsWith('/civil')) {
-			return 'civil';
+		if (relativePath.startsWith("/civil")) {
+			return "civil";
 		}
 		return null;
 	});
@@ -33,21 +37,21 @@
 	const isConsolidado = $derived.by(() => {
 		const pathname = $page.url.pathname;
 		const relativePath = base ? pathname.substring(base.length) : pathname;
-		return relativePath.startsWith('/consolidado');
+		return relativePath.startsWith("/consolidado");
 	});
 
 	const isHome = $derived.by(() => {
 		const pathname = $page.url.pathname;
 		const relativePath = base ? pathname.substring(base.length) : pathname;
-		return relativePath === '/' || relativePath === '';
+		return relativePath === "/" || relativePath === "";
 	});
 
 	// Trigger dataset loading reactively when the fuero changes
 	$effect(() => {
-		if (currentFuero === 'trabajo') {
-			untrack(() => loadDataset('trabajo'));
-		} else if (currentFuero === 'civil') {
-			untrack(() => loadDataset('civil'));
+		if (currentFuero === "trabajo") {
+			untrack(() => loadDataset("trabajo"));
+		} else if (currentFuero === "civil") {
+			untrack(() => loadDataset("civil"));
 		} else if (isConsolidado || isHome) {
 			untrack(() => loadConsolidatedDataset());
 		} else {
@@ -63,22 +67,66 @@
 		return currentPath === target || currentPath === target + "/";
 	}
 
+	type NavPath =
+		| "/civil"
+		| "/civil/sedes"
+		| "/civil/sede"
+		| "/trabajo"
+		| "/trabajo/sedes"
+		| "/trabajo/sede";
+
+	type NavItem = {
+		path: NavPath;
+		label: string;
+		icon: typeof LayoutDashboard;
+	};
+
 	const navItems = $derived(
-		currentFuero
+		currentFuero === "civil"
 			? [
-					{ path: `/${currentFuero}`, label: "Provincia", icon: LayoutDashboard },
-					{ path: `/${currentFuero}/sedes`, label: "Sedes", icon: Building2 },
-					{ path: `/${currentFuero}/sede`, label: "Detalle x Sede", icon: FileText },
-				]
-			: []
+					{
+						path: "/civil",
+						label: "Provincia",
+						icon: LayoutDashboard,
+					},
+					{
+						path: "/civil/sedes",
+						label: "Sedes",
+						icon: Building2,
+					},
+					{
+						path: "/civil/sede",
+						label: "Detalle por sede",
+						icon: FileText,
+					},
+				] satisfies NavItem[]
+			: currentFuero === "trabajo"
+				? [
+						{
+							path: "/trabajo",
+							label: "Provincia",
+							icon: LayoutDashboard,
+						},
+						{
+							path: "/trabajo/sedes",
+							label: "Sedes",
+							icon: Building2,
+						},
+						{
+							path: "/trabajo/sede",
+							label: "Detalle por sede",
+							icon: FileText,
+						},
+					] satisfies NavItem[]
+			: [],
 	);
 
 	function resetFuero() {
 		db.selectedFuero = null;
-		if (typeof window !== 'undefined') {
-			localStorage.removeItem('selectedFuero');
+		if (typeof window !== "undefined") {
+			localStorage.removeItem("selectedFuero");
 		}
-		goto(`${base}/`);
+		goto(resolve("/"));
 	}
 </script>
 
@@ -100,14 +148,14 @@
 						<h1
 							class="text-sm font-bold tracking-tight text-brand-text leading-none"
 						>
-							{#if currentFuero === 'civil'}
-								Estadísticas de los Juzgados en lo Civil y Comercial - SCBA
-							{:else if currentFuero === 'trabajo'}
-								Estadísticas de los Tribunales de Trabajo - SCBA
+							{#if currentFuero === "civil"}
+								Juzgados Civiles y Comerciales - SCBA
+							{:else if currentFuero === "trabajo"}
+								Tribunales de Trabajo - SCBA
 							{:else if isConsolidado}
-								Estadísticas Consolidadas (Civil y Trabajo) - SCBA
+								Tablero Consolidado - SCBA
 							{:else}
-								Estadísticas Judiciales - SCBA
+								Estadísticas Judiciales Bonaerenses
 							{/if}
 						</h1>
 					</div>
@@ -116,10 +164,10 @@
 				<!-- Navigation -->
 				{#if currentFuero}
 					<nav class="hidden md:flex space-x-1">
-						{#each navItems as item}
+						{#each navItems as item (item.path)}
 							{@const Icon = item.icon}
 							<a
-								href="{base}{item.path}"
+								href={resolve(item.path)}
 								class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition {isRouteActive(
 									item.path,
 									activePath,
@@ -168,15 +216,18 @@
 					class="w-10 h-10 text-brand-indigo animate-spin mb-4"
 				/>
 				<h3 class="text-lg font-bold text-brand-text">
-					Cargando base de datos
+					Cargando datos judiciales
 				</h3>
 				<p class="text-xs text-brand-text-muted mt-1">
-					{#if currentFuero === 'civil'}
-						Parseando registros históricos de juzgados civiles y comerciales...
-					{:else if currentFuero === 'trabajo'}
-						Parseando registros históricos de tribunales de trabajo...
+					{#if currentFuero === "civil"}
+						Preparando registros históricos de juzgados civiles y
+						comerciales...
+					{:else if currentFuero === "trabajo"}
+						Preparando registros históricos de tribunales de
+						trabajo...
 					{:else}
-						Parseando registros históricos a nivel consolidado provincial...
+						Preparando registros históricos a nivel consolidado
+						provincial...
 					{/if}
 				</p>
 			</div>
@@ -191,7 +242,7 @@
 					<AlertCircle class="w-8 h-8" />
 				</div>
 				<h3 class="text-lg font-bold text-brand-text">
-					Error de Carga
+					No se pudieron cargar los datos
 				</h3>
 				<p class="text-xs text-brand-text-muted mt-2 leading-relaxed">
 					{db.error}
@@ -214,10 +265,32 @@
 		class="border-t border-brand-border py-6 bg-stone-200/20 text-center text-[10px] text-brand-text-muted font-sans"
 	>
 		<div class="max-w-7xl mx-auto px-4">
-			<p>© 2026 - <a href="https://www.linkedin.com/in/jgjuara/" target="_blank" rel="noopener noreferrer" class="hover:underline text-brand-indigo font-medium">Juan Gabriel Juara</a> en base a datos de la <a href="https://www.scba.gov.ar/estadisticas.asp" target="_blank" rel="noopener noreferrer" class="hover:underline text-brand-indigo font-medium">SCBA</a></p>
+			<p>
+				© 2026 - <a
+					href="https://www.linkedin.com/in/jgjuara/"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="hover:underline text-brand-indigo font-medium"
+					>Juan Gabriel Juara</a
+				>
+				en base a datos de la
+				<a
+					href="https://www.scba.gov.ar/estadisticas.asp"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="hover:underline text-brand-indigo font-medium"
+					>SCBA</a
+				>
+			</p>
 			<p class="mt-1">
-				Herramienta descriptiva y exploratoria de flujos procesales.
-				Fuente de datos: <a href="https://www.scba.gov.ar/estadisticas.asp" target="_blank" rel="noopener noreferrer" class="hover:underline text-brand-indigo font-medium">Parquet/CSV SCBA</a>.
+				Tablero descriptivo de gestión judicial basado en datos públicos.
+				Fuente de datos: <a
+					href="https://github.com/jgjuara/scba-estadisticas/tree/main/static/data"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="hover:underline text-brand-indigo font-medium"
+					>CSV procesados a partir de publicaciones estadísticas de la SCBA</a
+				>.
 			</p>
 		</div>
 	</footer>
@@ -227,10 +300,10 @@
 		<nav
 			class="md:hidden sticky bottom-0 z-40 bg-brand-bg/90 backdrop-blur-lg border-t border-brand-border py-2 px-4 flex justify-around"
 		>
-			{#each navItems as item}
+			{#each navItems as item (item.path)}
 				{@const Icon = item.icon}
 				<a
-					href="{base}{item.path}"
+					href={resolve(item.path)}
 					class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition {isRouteActive(
 						item.path,
 						activePath,

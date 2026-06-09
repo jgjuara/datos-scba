@@ -2,6 +2,7 @@
 	import { untrack } from "svelte";
 	import { page } from "$app/stores";
 	import { goto } from "$app/navigation";
+	import { resolve } from "$app/paths";
 	import { db } from "$lib/data/loader.svelte";
 	import {
 		calculateMetrics,
@@ -32,13 +33,11 @@
 		untrack(() => {
 			const currentId = $page.url.searchParams.get("id") || "";
 			if (currentSede !== currentId) {
-				const url = new URL($page.url);
-				if (currentSede) {
-					url.searchParams.set("id", currentSede);
-				} else {
-					url.searchParams.delete("id");
-				}
-				goto(url.pathname + url.search, {
+				goto(resolve(
+					currentSede
+						? `/civil/sede?id=${encodeURIComponent(currentSede)}`
+						: "/civil/sede",
+				), {
 					keepFocus: true,
 					replaceState: true,
 					noScroll: true,
@@ -261,11 +260,10 @@
 			</div>
 			<div>
 				<h2 class="text-2xl font-bold text-brand-text tracking-tight">
-					Detalle por Sede Judicial - Civil y Comercial
+					Detalle de sede - Civil y Comercial
 				</h2>
 				<p class="text-xs text-brand-text-muted mt-1">
-					Historial y comparativa detallada de rendimiento procesal
-					por sede.
+					Evolución anual, composición de resoluciones y comparación contra el promedio provincial.
 				</p>
 			</div>
 		</div>
@@ -285,7 +283,7 @@
 				Selección de Sede
 			</h4>
 			<p class="text-[11px] text-brand-text-muted">
-				Elige una sede para analizar sus indicadores.
+				Elija una sede para analizar sus indicadores.
 			</p>
 		</div>
 
@@ -311,8 +309,7 @@
 				Ninguna sede seleccionada
 			</h3>
 			<p class="text-xs text-brand-text-muted mt-2 max-w-sm">
-				Utiliza el buscador superior para seleccionar una sede judicial
-				y visualizar sus estadísticas detalladas.
+				Seleccione una sede judicial con el buscador superior para ver su serie histórica e indicadores.
 			</p>
 		</div>
 	{:else if !seatExists}
@@ -541,7 +538,7 @@
 			>
 				<LineChart
 					series={lineSeriesActivity}
-					title="Evolución Temporal de Carga de Trabajo (Ingresos vs Resueltas)"
+					title="Evolución anual de ingresos y resoluciones"
 				/>
 			</div>
 
@@ -551,7 +548,7 @@
 			>
 				<LineChart
 					series={lineSeriesTasaResolucion}
-					title="Comparativa Temporal: Tasa de Resolución (Sede vs Provincia)"
+					title="Tasa de resolución: sede vs provincia"
 					formatY={formatPercent}
 				/>
 			</div>
@@ -562,7 +559,7 @@
 			>
 				<LineChart
 					series={lineSeriesTasaSentencia}
-					title="Comparativa Temporal: Tasa de Sentencia (Sede vs Provincia)"
+					title="Tasa de sentencia: sede vs provincia"
 					formatY={formatPercent}
 				/>
 			</div>
@@ -573,7 +570,7 @@
 			>
 				<LineChart
 					series={lineSeriesTasaCaducidad}
-					title="Comparativa Temporal: Tasa de Caducidad (Sede vs Provincia)"
+					title="Tasa de caducidad: sede vs provincia"
 					formatY={formatPercent}
 				/>
 			</div>
@@ -586,7 +583,7 @@
 					data={seatResolutionBreakdown}
 					keys={breakdownKeys}
 					colors={breakdownColors}
-					title="Composición Histórica de Resoluciones (Modos de Cierre)"
+					title="Composición histórica de resoluciones"
 				/>
 			</div>
 		</div>

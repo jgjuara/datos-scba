@@ -426,10 +426,10 @@
 	<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
 		<div>
 			<h2 class="text-2xl font-bold text-brand-text tracking-tight">
-				Dashboard Consolidado Provincial
+				Actividad judicial provincial consolidada
 			</h2>
 			<p class="text-xs text-brand-text-muted mt-1">
-				Análisis consolidado de la actividad judicial para fueros Civil y Comercial y Trabajo.
+				Lectura integrada de causas ingresadas, causas resueltas y modos de cierre para los fueros Civil y Comercial y Trabajo.
 			</p>
 		</div>
 
@@ -446,7 +446,7 @@
 			value={formatInt(kpis.ingresadas - kpis.resueltas)}
 			icon={Scale}
 			variant="indigo"
-			subtitle="Ingresadas - resueltas en el período"
+			subtitle="Ingresadas menos resueltas en el período"
 		/>
 
 		<KPI
@@ -502,10 +502,10 @@
 		>
 			<div class="px-2">
 				<h5 class="text-sm font-bold text-brand-text">
-					Brecha Anual por Fuero (Ingresadas - Resueltas)
+					Brecha anual por fuero
 				</h5>
 				<p class="text-[10px] text-brand-text-muted mt-1 leading-normal">
-					Diferencia anual acumulada abierta por fuero. Los valores positivos representan acumulación neta de expedientes.
+					Diferencia entre causas ingresadas y resueltas. Los valores positivos indican acumulación neta de expedientes.
 				</p>
 				<!-- Legend for Bar Chart -->
 				<div class="flex gap-4 mt-2 text-[10px]">
@@ -663,7 +663,7 @@
 		<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[400px] flex flex-col justify-between">
 			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-2 mb-3">
 				<h5 class="text-sm font-bold text-brand-text">
-					Composición Histórica de Resoluciones (Modos de Cierre)
+					Composición histórica de resoluciones
 				</h5>
 				
 				<!-- Fuero selector buttons for Composición Histórica -->

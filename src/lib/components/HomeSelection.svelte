@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { Scale, Building2 } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { db } from '$lib/data/loader.svelte';
 	import type { CourtRecord } from '$lib/data/loader.svelte';
 	import LineChart from '$lib/charts/LineChart.svelte';
 	import AreaChart from '$lib/charts/AreaChart.svelte';
 
 	function selectFuero(fuero: 'civil' | 'trabajo') {
-		goto(`${base}/${fuero}`);
+		goto(resolve(`/${fuero}`));
 	}
 
 	// Reconstruct Svelte CourtRecord interface structure grouped by year
@@ -226,7 +226,7 @@
 				Estadísticas Judiciales de la Provincia de Buenos Aires
 			</h2>
 			<p class="text-sm sm:text-base text-brand-text-muted max-w-2xl mx-auto font-sans leading-relaxed">
-				Seleccione la jurisdicción o fuero que desea explorar. Esta herramienta permite visualizar de forma descriptiva el flujo de causas, resoluciones y tasas de desempeño histórico desde 2017 a 2025.
+				Tablero exploratorio sobre causas ingresadas, causas resueltas y modos de cierre en juzgados civiles y comerciales y tribunales de trabajo bonaerenses. Los datos provienen de publicaciones estadísticas de la SCBA para el período 2017-2025.
 			</p>
 		</div>
 
@@ -234,7 +234,7 @@
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
 			<!-- Consolidado Provincial Card -->
 			<button
-				onclick={() => goto(`${base}/consolidado`)}
+				onclick={() => goto(resolve('/consolidado'))}
 				class="glass-panel-interactive text-left p-8 rounded-3xl border border-brand-border flex flex-col justify-between h-[280px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-indigo group"
 			>
 				<div class="space-y-4">
@@ -246,7 +246,7 @@
 							Consolidado Provincial
 						</h3>
 						<p class="text-xs text-brand-text-muted mt-2 font-sans leading-relaxed">
-							Analice la activity consolidada a nivel provincial de forma integrada. Visualice y filtre la evolución temporal de causas, brechas y tasas de resolución para ambos fueros.
+							Lea la actividad provincial de ambos fueros en una sola vista: evolución anual, brecha entre ingresos y resoluciones, tasas de resolución y composición de los cierres.
 						</p>
 					</div>
 				</div>
@@ -269,7 +269,7 @@
 							Tribunales de Trabajo
 						</h3>
 						<p class="text-xs text-brand-text-muted mt-2 font-sans leading-relaxed">
-							Explore los registros históricos y el flujo de litigios laborales. Analice sentencias, conciliaciones, caducidades y el stock provincial de expedientes acumulados.
+							Explore el movimiento de expedientes laborales por año y sede. Compare ingresos, resoluciones y formas de finalización como sentencia, conciliación, caducidad o incompetencia.
 						</p>
 					</div>
 				</div>
@@ -292,7 +292,7 @@
 							Juzgados en lo Civil y Comercial
 						</h3>
 						<p class="text-xs text-brand-text-muted mt-2 font-sans leading-relaxed">
-							Acceda al análisis estadístico consolidado de la actividad en juzgados civiles y comerciales bonaerenses. Compare sedes, explore tasas de resolución y modos de cierre.
+							Consulte la actividad de los juzgados civiles y comerciales. Identifique diferencias territoriales, dinámica de ingresos y capacidad de resolución por departamento o sede.
 						</p>
 					</div>
 				</div>
@@ -306,10 +306,10 @@
 		<div class="mt-16 text-left space-y-6 w-full">
 			<div class="border-t border-brand-border pt-8">
 				<h3 class="text-xl font-bold text-brand-text font-serif">
-					Vista Rápida: Actividad Provincial Consolidada
+					Vista rápida: actividad provincial consolidada
 				</h3>
 				<p class="text-xs text-brand-text-muted mt-1 font-sans">
-					Resumen de la evolución y resolución de expedientes a nivel provincial consolidando ambos fueros (Civil y Comercial y Trabajo).
+					Una primera lectura del volumen anual de expedientes y de los modos de resolución informados por la SCBA para Civil y Comercial y Trabajo.
 				</p>
 			</div>
 
@@ -365,9 +365,22 @@
 			</div>
 		</div>
 
+		<!-- About me -->
+		<section class="mt-12 text-left glass-panel rounded-2xl border border-brand-border p-6 max-w-3xl mx-auto">
+			<p class="text-[10px] text-brand-indigo font-mono uppercase tracking-wider mb-2">
+				About me
+			</p>
+			<h3 class="text-lg font-bold text-brand-text font-serif">
+				Juan Gabriel Juara
+			</h3>
+			<p class="text-xs text-brand-text-muted mt-2 font-sans leading-relaxed">
+				Soy sociólogo y analista de datos especializado en temas de gestión pública e inteligencia artificial. Trabajo actualmente en Fundar.
+			</p>
+		</section>
+
 		<!-- Footer Badge -->
 		<div class="text-[10px] text-brand-text-muted font-mono uppercase tracking-wider pt-6">
-			Fuente de datos: <a href="https://www.scba.gov.ar/estadisticas.asp" target="_blank" rel="noopener noreferrer" class="hover:underline text-brand-indigo font-medium">Suprema Corte de Justicia de la Provincia de Buenos Aires (SCBA)</a>
+			Fuente de datos: <a href="https://www.scba.gov.ar/estadisticas.asp" target="_blank" rel="noopener noreferrer" class="hover:underline text-brand-indigo font-medium">Suprema Corte de Justicia de la Provincia de Buenos Aires (SCBA)</a> · <a href="https://estadisticas.scba.gov.ar/modelos/" target="_blank" rel="noopener noreferrer" class="hover:underline text-brand-indigo font-medium">Planillas modelo del Área de Estadísticas</a>
 		</div>
 	</div>
 </div>

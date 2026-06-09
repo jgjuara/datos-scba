@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { base } from "$app/paths";
+	import { resolve } from "$app/paths";
 	import { db } from "$lib/data/loader.svelte";
 	import { calculateMetrics, aggregateRecords } from "$lib/data/metrics";
 	import Filters from "$lib/components/Filters.svelte";
@@ -300,10 +300,10 @@
 	>
 		<div>
 			<h2 class="text-2xl font-bold text-brand-text tracking-tight">
-				Análisis de Sedes Judiciales
+				Sedes judiciales - Trabajo
 			</h2>
 			<p class="text-xs text-brand-text-muted mt-1">
-				Indicadores promedio para el periodo seleccionado.
+				Compare volumen de causas, tasa de resolución y modos de cierre entre departamentos y sedes.
 			</p>
 		</div>
 
@@ -318,7 +318,7 @@
 		>
 			<ScatterChart
 				data={scatterPoints}
-				title="Dispersión de Desempeño: Causas Ingresadas vs Tasa de Resolución"
+				title="Relación entre causas ingresadas y tasa de resolución"
 				xLabel="Causas Ingresadas"
 				yLabel="Tasa de Resolución"
 				formatY={formatPercent}
@@ -364,8 +364,7 @@
 				Tabla Comparativa General
 			</h3>
 			<p class="text-xs text-brand-text-muted mt-1">
-				Haz clic en los encabezados para ordenar o busca una sede
-				específica.
+				Ordene por columna o busque una sede específica.
 			</p>
 		</div>
 
@@ -379,8 +378,7 @@
 				Rankings de Desempeño y Caducidad
 			</h3>
 			<p class="text-xs text-brand-text-muted mt-1">
-				Sedes con mayor (Top) y menor (Bottom) efectividad en sus
-				respectivos flujos. Muestra de las 5 principales.
+				Sedes con mayores y menores valores en cada indicador. La muestra presenta cinco casos por grupo.
 			</p>
 		</div>
 
@@ -407,7 +405,7 @@
 							Top 5
 						</h5>
 						<div class="space-y-1.5">
-							{#each rankResolucion.top as item, i}
+							{#each rankResolucion.top as item, i (item.id)}
 								<div
 									class="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-white border border-brand-border"
 								>
@@ -415,9 +413,7 @@
 										class="truncate max-w-[130px] text-brand-text-muted"
 									>
 										<a
-											href="{base}/trabajo/sede?id={encodeURIComponent(
-												item.id,
-											)}"
+											href={resolve(`/trabajo/sede?id=${encodeURIComponent(item.id)}`)}
 											class="hover:text-brand-indigo transition font-medium font-sans"
 										>
 											{i + 1}. {item.name}
@@ -442,7 +438,7 @@
 							Bottom 5
 						</h5>
 						<div class="space-y-1.5">
-							{#each rankResolucion.bottom as item, i}
+							{#each rankResolucion.bottom as item, i (item.id)}
 								<div
 									class="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-white border border-brand-border"
 								>
@@ -450,9 +446,7 @@
 										class="truncate max-w-[130px] text-brand-text-muted"
 									>
 										<a
-											href="{base}/trabajo/sede?id={encodeURIComponent(
-												item.id,
-											)}"
+											href={resolve(`/trabajo/sede?id=${encodeURIComponent(item.id)}`)}
 											class="hover:text-brand-indigo transition font-medium font-sans"
 										>
 											{i + 1}. {item.name}
@@ -493,7 +487,7 @@
 							Top 5
 						</h5>
 						<div class="space-y-1.5">
-							{#each rankSentencia.top as item, i}
+							{#each rankSentencia.top as item, i (item.id)}
 								<div
 									class="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-white border border-brand-border"
 								>
@@ -501,9 +495,7 @@
 										class="truncate max-w-[130px] text-brand-text-muted"
 									>
 										<a
-											href="{base}/trabajo/sede?id={encodeURIComponent(
-												item.id,
-											)}"
+											href={resolve(`/trabajo/sede?id=${encodeURIComponent(item.id)}`)}
 											class="hover:text-brand-indigo transition font-medium font-sans"
 										>
 											{i + 1}. {item.name}
@@ -528,7 +520,7 @@
 							Bottom 5
 						</h5>
 						<div class="space-y-1.5">
-							{#each rankSentencia.bottom as item, i}
+							{#each rankSentencia.bottom as item, i (item.id)}
 								<div
 									class="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-white border border-brand-border"
 								>
@@ -536,9 +528,7 @@
 										class="truncate max-w-[130px] text-brand-text-muted"
 									>
 										<a
-											href="{base}/trabajo/sede?id={encodeURIComponent(
-												item.id,
-											)}"
+											href={resolve(`/trabajo/sede?id=${encodeURIComponent(item.id)}`)}
 											class="hover:text-brand-indigo transition font-medium font-sans"
 										>
 											{i + 1}. {item.name}
@@ -579,7 +569,7 @@
 							Mayor Caducidad
 						</h5>
 						<div class="space-y-1.5">
-							{#each rankCaducidad.top as item, i}
+							{#each rankCaducidad.top as item, i (item.id)}
 								<div
 									class="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-white border border-brand-danger/20 border-dashed"
 								>
@@ -587,9 +577,7 @@
 										class="truncate max-w-[130px] text-brand-text-muted"
 									>
 										<a
-											href="{base}/trabajo/sede?id={encodeURIComponent(
-												item.id,
-											)}"
+											href={resolve(`/trabajo/sede?id=${encodeURIComponent(item.id)}`)}
 											class="hover:text-brand-indigo transition font-medium font-sans"
 										>
 											{i + 1}. {item.name}
@@ -614,7 +602,7 @@
 							Menor Caducidad
 						</h5>
 						<div class="space-y-1.5">
-							{#each rankCaducidad.bottom as item, i}
+							{#each rankCaducidad.bottom as item, i (item.id)}
 								<div
 									class="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-white border border-brand-success/20 border-dashed"
 								>
@@ -622,9 +610,7 @@
 										class="truncate max-w-[130px] text-brand-text-muted"
 									>
 										<a
-											href="{base}/trabajo/sede?id={encodeURIComponent(
-												item.id,
-											)}"
+											href={resolve(`/trabajo/sede?id=${encodeURIComponent(item.id)}`)}
 											class="hover:text-brand-indigo transition font-medium font-sans"
 										>
 											{i + 1}. {item.name}
@@ -652,7 +638,7 @@
 				Comparador Simultáneo de Sedes
 			</h3>
 			<p class="text-xs text-brand-text-muted mt-1">
-				Selecciona hasta 6 sedes para superponer y contrastar sus
+				Seleccione hasta 6 sedes para superponer y contrastar sus
 				indicadores históricos para el período seleccionado.
 			</p>
 		</div>
@@ -669,7 +655,7 @@
 						Buscador de Sedes
 					</h4>
 					<p class="text-[11px] text-brand-text-muted">
-						Elige las sedes a incorporar en las comparativas.
+						Elija las sedes que quiere incorporar a las comparativas.
 					</p>
 				</div>
 				<div class="flex flex-wrap items-center gap-4">
@@ -682,7 +668,7 @@
 
 					<!-- Selected Chips -->
 					<div class="flex flex-wrap gap-2">
-						{#each selectedSeats as name}
+						{#each selectedSeats as name (name)}
 							{@const color = seatColorMap.get(name)}
 							<div
 								class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-transparent text-xs font-semibold tracking-wide text-white transition-all shadow-sm"
