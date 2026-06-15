@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { Scale, Building2 } from '@lucide/svelte';
-	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
-	import { db } from '$lib/data/loader.svelte';
-	import type { CourtRecord } from '$lib/data/loader.svelte';
-	import LineChart from '$lib/charts/LineChart.svelte';
-	import AreaChart from '$lib/charts/AreaChart.svelte';
+	import { Scale, Building2 } from "@lucide/svelte";
+	import { goto } from "$app/navigation";
+	import { resolve } from "$app/paths";
+	import { db } from "$lib/data/loader.svelte";
+	import type { CourtRecord } from "$lib/data/loader.svelte";
+	import LineChart from "$lib/charts/LineChart.svelte";
+	import AreaChart from "$lib/charts/AreaChart.svelte";
 
-	function selectFuero(fuero: 'civil' | 'trabajo') {
+	function selectFuero(fuero: "civil" | "trabajo") {
 		goto(resolve(`/${fuero}`));
 	}
 
@@ -20,7 +20,7 @@
 			if (!groups[anio]) {
 				groups[anio] = {
 					anio,
-					sede: 'PROVINCIA',
+					sede: "PROVINCIA",
 					ingresadas: 0,
 					sentencia: 0,
 					conciliacion: 0,
@@ -30,7 +30,7 @@
 					desistimiento: 0,
 					interlocutorios: 0,
 					incompetencia: 0,
-					totalResueltas: 0
+					totalResueltas: 0,
 				};
 			}
 
@@ -38,34 +38,34 @@
 			const valor = r.valor;
 
 			switch (r.tipo) {
-				case 'Ingresadas':
+				case "Ingresadas":
 					record.ingresadas += valor;
 					break;
-				case 'Sentencia':
+				case "Sentencia":
 					record.sentencia += valor;
 					break;
-				case 'Conciliación':
+				case "Conciliación":
 					record.conciliacion += valor;
 					break;
-				case 'Allanamiento':
+				case "Allanamiento":
 					record.allanamiento += valor;
 					break;
-				case 'Transacción':
+				case "Transacción":
 					record.transaccion += valor;
 					break;
-				case 'Caducidad':
+				case "Caducidad":
 					record.caducidad += valor;
 					break;
-				case 'Desistimiento':
+				case "Desistimiento":
 					record.desistimiento += valor;
 					break;
-				case 'Interlocutorios':
+				case "Interlocutorios":
 					record.interlocutorios += valor;
 					break;
-				case 'Incompetencia':
+				case "Incompetencia":
 					record.incompetencia += valor;
 					break;
-				case 'Total Resueltas':
+				case "Total Resueltas":
 					record.totalResueltas += valor;
 					break;
 			}
@@ -87,7 +87,7 @@
 			Caducidad: r.caducidad,
 			Desistimiento: r.desistimiento,
 			Interlocutorios: r.interlocutorios,
-			Incompetencia: r.incompetencia
+			Incompetencia: r.incompetencia,
 		}));
 	});
 
@@ -127,12 +127,12 @@
 	};
 
 	// State for Composición Histórica chart variety in teaser
-	let compositionFuero = $state<'ambos' | 'civil' | 'trabajo'>('ambos');
+	let compositionFuero = $state<"ambos" | "civil" | "trabajo">("ambos");
 
 	// Filter records specifically for Composición Histórica based on selected variety
 	const compositionRecords = $derived.by(() => {
 		return db.consolidatedRecords.filter(
-			(r) => compositionFuero === 'ambos' || r.fuero === compositionFuero
+			(r) => compositionFuero === "ambos" || r.fuero === compositionFuero,
 		);
 	});
 
@@ -145,7 +145,7 @@
 			if (!groups[anio]) {
 				groups[anio] = {
 					anio,
-					sede: 'PROVINCIA',
+					sede: "PROVINCIA",
 					ingresadas: 0,
 					sentencia: 0,
 					conciliacion: 0,
@@ -155,7 +155,7 @@
 					desistimiento: 0,
 					interlocutorios: 0,
 					incompetencia: 0,
-					totalResueltas: 0
+					totalResueltas: 0,
 				};
 			}
 
@@ -163,34 +163,34 @@
 			const valor = r.valor;
 
 			switch (r.tipo) {
-				case 'Ingresadas':
+				case "Ingresadas":
 					record.ingresadas += valor;
 					break;
-				case 'Sentencia':
+				case "Sentencia":
 					record.sentencia += valor;
 					break;
-				case 'Conciliación':
+				case "Conciliación":
 					record.conciliacion += valor;
 					break;
-				case 'Allanamiento':
+				case "Allanamiento":
 					record.allanamiento += valor;
 					break;
-				case 'Transacción':
+				case "Transacción":
 					record.transaccion += valor;
 					break;
-				case 'Caducidad':
+				case "Caducidad":
 					record.caducidad += valor;
 					break;
-				case 'Desistimiento':
+				case "Desistimiento":
 					record.desistimiento += valor;
 					break;
-				case 'Interlocutorios':
+				case "Interlocutorios":
 					record.interlocutorios += valor;
 					break;
-				case 'Incompetencia':
+				case "Incompetencia":
 					record.incompetencia += valor;
 					break;
-				case 'Total Resueltas':
+				case "Total Resueltas":
 					record.totalResueltas += valor;
 					break;
 			}
@@ -210,23 +210,34 @@
 			Caducidad: r.caducidad,
 			Desistimiento: r.desistimiento,
 			Interlocutorios: r.interlocutorios,
-			Incompetencia: r.incompetencia
+			Incompetencia: r.incompetencia,
 		}));
 	});
 </script>
 
-<div class="flex-1 flex flex-col items-center justify-center py-12 px-4 font-serif w-full">
+<div
+	class="flex-1 flex flex-col items-center justify-center py-12 px-4 font-serif w-full"
+>
 	<div class="max-w-7xl w-full text-center space-y-8">
 		<!-- Main Titles -->
 		<div class="space-y-4">
-			<div class="inline-flex items-center justify-center p-2.5 rounded-2xl bg-brand-indigo/10 border border-brand-indigo/20 text-brand-indigo mb-2">
+			<div
+				class="inline-flex items-center justify-center p-2.5 rounded-2xl bg-brand-indigo/10 border border-brand-indigo/20 text-brand-indigo mb-2"
+			>
 				<Scale class="w-8 h-8" />
 			</div>
-			<h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-text font-serif">
+			<h2
+				class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-text font-serif"
+			>
 				Estadísticas Judiciales de la Provincia de Buenos Aires
 			</h2>
-			<p class="text-sm sm:text-base text-brand-text-muted max-w-2xl mx-auto font-sans leading-relaxed">
-				Tablero exploratorio sobre causas ingresadas, causas resueltas y modos de cierre en juzgados civiles y comerciales y tribunales de trabajo bonaerenses. Los datos provienen de publicaciones estadísticas de la SCBA para el período 2017-2025.
+			<p
+				class="text-sm sm:text-base text-brand-text-muted max-w-2xl mx-auto font-sans leading-relaxed"
+			>
+				Tablero exploratorio sobre causas ingresadas, causas resueltas y
+				modos de cierre en juzgados civiles y comerciales y tribunales
+				de trabajo bonaerenses. Los datos provienen de publicaciones
+				estadísticas de la SCBA para el período 2017-2025.
 			</p>
 		</div>
 
@@ -234,69 +245,102 @@
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
 			<!-- Consolidado Provincial Card -->
 			<button
-				onclick={() => goto(resolve('/consolidado'))}
+				onclick={() => goto(resolve("/consolidado"))}
 				class="glass-panel-interactive text-left p-8 rounded-3xl border border-brand-border flex flex-col justify-between h-[280px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-indigo group"
 			>
 				<div class="space-y-4">
-					<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-brand-indigo flex items-center justify-center text-white shadow-md transition group-hover:scale-110 duration-300">
+					<div
+						class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-brand-indigo flex items-center justify-center text-white shadow-md transition group-hover:scale-110 duration-300"
+					>
 						<Scale class="w-6 h-6" />
 					</div>
 					<div>
-						<h3 class="text-xl font-bold text-brand-text font-serif group-hover:text-brand-indigo transition">
+						<h3
+							class="text-xl font-bold text-brand-text font-serif group-hover:text-brand-indigo transition"
+						>
 							Consolidado Provincial
 						</h3>
-						<p class="text-xs text-brand-text-muted mt-2 font-sans leading-relaxed">
-							Lea la actividad provincial de ambos fueros en una sola vista: evolución anual, brecha entre ingresos y resoluciones, tasas de resolución y composición de los cierres.
+						<p
+							class="text-xs text-brand-text-muted mt-2 font-sans leading-relaxed"
+						>
+							Lea la actividad provincial de ambos fueros en una
+							sola vista: evolución anual, brecha entre ingresos y
+							resoluciones, tasas de resolución y composición de
+							los cierres.
 						</p>
 					</div>
 				</div>
-				<div class="flex items-center text-xs font-semibold text-brand-indigo font-sans mt-4 group-hover:translate-x-1 transition-transform">
+				<div
+					class="flex items-center text-xs font-semibold text-brand-indigo font-sans mt-4 group-hover:translate-x-1 transition-transform"
+				>
 					Comenzar exploración &rarr;
 				</div>
 			</button>
 
 			<!-- Tribunales de Trabajo Card -->
 			<button
-				onclick={() => selectFuero('trabajo')}
+				onclick={() => selectFuero("trabajo")}
 				class="glass-panel-interactive text-left p-8 rounded-3xl border border-brand-border flex flex-col justify-between h-[280px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-indigo group"
 			>
 				<div class="space-y-4">
-					<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-success to-emerald-600 flex items-center justify-center text-white shadow-md transition group-hover:scale-110 duration-300">
+					<div
+						class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-success to-emerald-600 flex items-center justify-center text-white shadow-md transition group-hover:scale-110 duration-300"
+					>
 						<Scale class="w-6 h-6" />
 					</div>
 					<div>
-						<h3 class="text-xl font-bold text-brand-text font-serif group-hover:text-brand-success transition">
+						<h3
+							class="text-xl font-bold text-brand-text font-serif group-hover:text-brand-success transition"
+						>
 							Tribunales de Trabajo
 						</h3>
-						<p class="text-xs text-brand-text-muted mt-2 font-sans leading-relaxed">
-							Explore el movimiento de expedientes laborales por año y sede. Compare ingresos, resoluciones y formas de finalización como sentencia, conciliación, caducidad o incompetencia.
+						<p
+							class="text-xs text-brand-text-muted mt-2 font-sans leading-relaxed"
+						>
+							Explore el movimiento de expedientes laborales por
+							año y sede. Compare ingresos, resoluciones y formas
+							de finalización como sentencia, conciliación,
+							caducidad o incompetencia.
 						</p>
 					</div>
 				</div>
-				<div class="flex items-center text-xs font-semibold text-brand-success font-sans mt-4 group-hover:translate-x-1 transition-transform">
+				<div
+					class="flex items-center text-xs font-semibold text-brand-success font-sans mt-4 group-hover:translate-x-1 transition-transform"
+				>
 					Comenzar exploración &rarr;
 				</div>
 			</button>
 
 			<!-- Juzgados Civiles Card -->
 			<button
-				onclick={() => selectFuero('civil')}
+				onclick={() => selectFuero("civil")}
 				class="glass-panel-interactive text-left p-8 rounded-3xl border border-brand-border flex flex-col justify-between h-[280px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-indigo group"
 			>
 				<div class="space-y-4">
-					<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-indigo to-indigo-500 flex items-center justify-center text-white shadow-md transition group-hover:scale-110 duration-300">
+					<div
+						class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-indigo to-indigo-500 flex items-center justify-center text-white shadow-md transition group-hover:scale-110 duration-300"
+					>
 						<Building2 class="w-6 h-6" />
 					</div>
 					<div>
-						<h3 class="text-xl font-bold text-brand-text font-serif group-hover:text-brand-indigo transition">
+						<h3
+							class="text-xl font-bold text-brand-text font-serif group-hover:text-brand-indigo transition"
+						>
 							Juzgados en lo Civil y Comercial
 						</h3>
-						<p class="text-xs text-brand-text-muted mt-2 font-sans leading-relaxed">
-							Consulte la actividad de los juzgados civiles y comerciales. Identifique diferencias territoriales, dinámica de ingresos y capacidad de resolución por departamento o sede.
+						<p
+							class="text-xs text-brand-text-muted mt-2 font-sans leading-relaxed"
+						>
+							Consulte la actividad de los juzgados civiles y
+							comerciales. Identifique diferencias territoriales,
+							dinámica de ingresos y capacidad de resolución por
+							departamento o sede.
 						</p>
 					</div>
 				</div>
-				<div class="flex items-center text-xs font-semibold text-brand-indigo font-sans mt-4 group-hover:translate-x-1 transition-transform">
+				<div
+					class="flex items-center text-xs font-semibold text-brand-indigo font-sans mt-4 group-hover:translate-x-1 transition-transform"
+				>
 					Comenzar exploración &rarr;
 				</div>
 			</button>
@@ -309,13 +353,17 @@
 					Vista rápida: actividad provincial consolidada
 				</h3>
 				<p class="text-xs text-brand-text-muted mt-1 font-sans">
-					Una primera lectura del volumen anual de expedientes y de los modos de resolución informados por la SCBA para Civil y Comercial y Trabajo.
+					Una primera lectura del volumen anual de expedientes y de
+					los modos de resolución informados por la SCBA para Civil y
+					Comercial y Trabajo.
 				</p>
 			</div>
 
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
 				<!-- Chart 1: Evolución Temporal -->
-				<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[400px] flex flex-col justify-between">
+				<div
+					class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[400px] flex flex-col justify-between"
+				>
 					<LineChart
 						series={lineSeriesActivity}
 						title="Evolución Temporal: Causas Ingresadas vs Resueltas"
@@ -323,38 +371,54 @@
 				</div>
 
 				<!-- Chart 2: Composición Histórica -->
-				<div class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[400px] flex flex-col justify-between">
-					<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-2 mb-3">
+				<div
+					class="glass-panel p-6 rounded-3xl border border-brand-border min-h-[400px] flex flex-col justify-between"
+				>
+					<div
+						class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-2 mb-3"
+					>
 						<h5 class="text-sm font-bold text-brand-text">
-							Composición Histórica de Resoluciones (Modos de Cierre)
+							Composición Histórica de Resoluciones (Modos de
+							Cierre)
 						</h5>
-						
+
 						<!-- Fuero selector buttons for Composición Histórica -->
-						<div class="flex bg-stone-100 p-0.5 rounded-xl border border-brand-border self-start sm:self-auto shadow-inner">
+						<div
+							class="flex bg-stone-100 p-0.5 rounded-xl border border-brand-border self-start sm:self-auto shadow-inner"
+						>
 							<button
 								type="button"
-								onclick={() => compositionFuero = 'ambos'}
-								class="px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer {compositionFuero === 'ambos' ? 'bg-white text-brand-text shadow-sm border border-brand-border/40 font-bold' : 'text-brand-text-muted hover:text-brand-text border border-transparent'}"
+								onclick={() => (compositionFuero = "ambos")}
+								class="px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer {compositionFuero ===
+								'ambos'
+									? 'bg-white text-brand-text shadow-sm border border-brand-border/40 font-bold'
+									: 'text-brand-text-muted hover:text-brand-text border border-transparent'}"
 							>
 								Todos
 							</button>
 							<button
 								type="button"
-								onclick={() => compositionFuero = 'civil'}
-								class="px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer {compositionFuero === 'civil' ? 'bg-[var(--color-brand-civil)] text-white shadow-sm border border-[var(--color-brand-civil)] font-bold' : 'text-brand-text-muted hover:text-brand-text border border-transparent'}"
+								onclick={() => (compositionFuero = "civil")}
+								class="px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer {compositionFuero ===
+								'civil'
+									? 'bg-[var(--color-brand-civil)] text-white shadow-sm border border-[var(--color-brand-civil)] font-bold'
+									: 'text-brand-text-muted hover:text-brand-text border border-transparent'}"
 							>
 								Civil
 							</button>
 							<button
 								type="button"
-								onclick={() => compositionFuero = 'trabajo'}
-								class="px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer {compositionFuero === 'trabajo' ? 'bg-[var(--color-brand-laboral)] text-white shadow-sm border border-[var(--color-brand-laboral)] font-bold' : 'text-brand-text-muted hover:text-brand-text border border-transparent'}"
+								onclick={() => (compositionFuero = "trabajo")}
+								class="px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer {compositionFuero ===
+								'trabajo'
+									? 'bg-[var(--color-brand-laboral)] text-white shadow-sm border border-[var(--color-brand-laboral)] font-bold'
+									: 'text-brand-text-muted hover:text-brand-text border border-transparent'}"
 							>
 								Trabajo
 							</button>
 						</div>
 					</div>
-					
+
 					<AreaChart
 						data={compositionYearlyAggr}
 						keys={breakdownKeys}
@@ -365,22 +429,18 @@
 			</div>
 		</div>
 
-		<!-- About me -->
-		<section class="mt-12 text-left glass-panel rounded-2xl border border-brand-border p-6 max-w-3xl mx-auto">
-			<p class="text-[10px] text-brand-indigo font-mono uppercase tracking-wider mb-2">
-				About me
-			</p>
-			<h3 class="text-lg font-bold text-brand-text font-serif">
-				Juan Gabriel Juara
-			</h3>
-			<p class="text-xs text-brand-text-muted mt-2 font-sans leading-relaxed">
-				Soy sociólogo y analista de datos especializado en temas de gestión pública e inteligencia artificial. Trabajo actualmente en Fundar.
-			</p>
-		</section>
-
 		<!-- Footer Badge -->
-		<div class="text-[10px] text-brand-text-muted font-mono uppercase tracking-wider pt-6">
-			Fuente de datos: <a href="https://www.scba.gov.ar/estadisticas.asp" target="_blank" rel="noopener noreferrer" class="hover:underline text-brand-indigo font-medium">Suprema Corte de Justicia de la Provincia de Buenos Aires (SCBA)</a> · <a href="https://estadisticas.scba.gov.ar/modelos/" target="_blank" rel="noopener noreferrer" class="hover:underline text-brand-indigo font-medium">Planillas modelo del Área de Estadísticas</a>
+		<div
+			class="text-[10px] text-brand-text-muted font-mono uppercase tracking-wider pt-6"
+		>
+			Fuente de datos: <a
+				href="https://www.scba.gov.ar/estadisticas.asp"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="hover:underline text-brand-indigo font-medium"
+				>Suprema Corte de Justicia de la Provincia de Buenos Aires
+				(SCBA)</a
+			>
 		</div>
 	</div>
 </div>

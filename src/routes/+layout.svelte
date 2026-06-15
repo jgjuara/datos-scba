@@ -83,7 +83,7 @@
 
 	const navItems = $derived(
 		currentFuero === "civil"
-			? [
+			? ([
 					{
 						path: "/civil",
 						label: "Provincia",
@@ -99,9 +99,9 @@
 						label: "Detalle por sede",
 						icon: FileText,
 					},
-				] satisfies NavItem[]
+				] satisfies NavItem[])
 			: currentFuero === "trabajo"
-				? [
+				? ([
 						{
 							path: "/trabajo",
 							label: "Provincia",
@@ -117,8 +117,8 @@
 							label: "Detalle por sede",
 							icon: FileText,
 						},
-					] satisfies NavItem[]
-			: [],
+					] satisfies NavItem[])
+				: [],
 	);
 
 	function resetFuero() {
@@ -265,7 +265,7 @@
 		class="border-t border-brand-border py-6 bg-stone-200/20 text-center text-[10px] text-brand-text-muted font-sans"
 	>
 		<div class="max-w-7xl mx-auto px-4">
-			<p>
+			<p class="mx-auto">
 				© 2026 - <a
 					href="https://www.linkedin.com/in/jgjuara/"
 					target="_blank"
@@ -282,14 +282,16 @@
 					>SCBA</a
 				>
 			</p>
-			<p class="mt-1">
-				Tablero descriptivo de gestión judicial basado en datos públicos.
-				Fuente de datos: <a
+			<p class="mx-auto mt-1">
+				Tablero descriptivo de gestión judicial basado en datos
+				públicos.
+				<a
 					href="https://github.com/jgjuara/scba-estadisticas/tree/main/static/data"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="hover:underline text-brand-indigo font-medium"
-					>CSV procesados a partir de publicaciones estadísticas de la SCBA</a
+					>CSV procesados a partir de publicaciones estadísticas de la
+					SCBA</a
 				>.
 			</p>
 		</div>
