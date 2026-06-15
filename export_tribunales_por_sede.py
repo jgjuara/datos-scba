@@ -99,8 +99,8 @@ def write_csv(rows: list[dict[str, int | str]], output_path: str) -> None:
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
 
-    with open(output_path, mode="w", encoding="utf-8", newline="") as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=OUTPUT_HEADERS)
+    with open(output_path, mode="w", encoding="utf-8", newline="\n") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=OUTPUT_HEADERS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
