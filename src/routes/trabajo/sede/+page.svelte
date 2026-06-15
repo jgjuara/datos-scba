@@ -117,12 +117,12 @@
 		{
 			name: 'Ingresadas (Sede)',
 			data: annualPerformance.map((a) => ({ x: a.anio, y: a.record.ingresadas })),
-			color: 'var(--color-brand-laboral)'
+			color: 'var(--color-brand-yellow-opaque)'
 		},
 		{
 			name: 'Resueltas (Sede)',
 			data: annualPerformance.map((a) => ({ x: a.anio, y: a.record.totalResueltas })),
-			color: 'var(--color-brand-laboral)'
+			color: 'var(--color-brand-green)'
 		}
 	]);
 
