@@ -1,4 +1,164 @@
 anio,fuero,tipo,valor
+2017,civil,Allanamiento,134
+2017,civil,Caducidad,7015
+2017,civil,Conciliación,2372
+2017,civil,Desistimiento,2501
+2017,civil,Incompetencia,10210
+2017,civil,Ingresadas,246629
+2017,civil,Interlocutorios,21780
+2017,civil,Sentencia,46278
+2017,civil,Total Resueltas,97691
+2017,civil,Transacción,7401
+2017,trabajo,Allanamiento,50
+2017,trabajo,Caducidad,3239
+2017,trabajo,Conciliación,35455
+2017,trabajo,Desistimiento,506
+2017,trabajo,Incompetencia,1184
+2017,trabajo,Ingresadas,89075
+2017,trabajo,Interlocutorios,522
+2017,trabajo,Sentencia,6686
+2017,trabajo,Total Resueltas,49803
+2017,trabajo,Transacción,2161
+2018,civil,Allanamiento,108
+2018,civil,Caducidad,6520
+2018,civil,Conciliación,2295
+2018,civil,Desistimiento,2436
+2018,civil,Incompetencia,8605
+2018,civil,Ingresadas,251725
+2018,civil,Interlocutorios,20815
+2018,civil,Sentencia,42613
+2018,civil,Total Resueltas,90838
+2018,civil,Transacción,7446
+2018,trabajo,Allanamiento,43
+2018,trabajo,Caducidad,3913
+2018,trabajo,Conciliación,35402
+2018,trabajo,Desistimiento,544
+2018,trabajo,Incompetencia,1711
+2018,trabajo,Ingresadas,61579
+2018,trabajo,Interlocutorios,1747
+2018,trabajo,Sentencia,7864
+2018,trabajo,Total Resueltas,55788
+2018,trabajo,Transacción,4564
+2019,civil,Allanamiento,126
+2019,civil,Caducidad,6759
+2019,civil,Conciliación,4076
+2019,civil,Desistimiento,2697
+2019,civil,Incompetencia,9301
+2019,civil,Ingresadas,250864
+2019,civil,Interlocutorios,21722
+2019,civil,Sentencia,36998
+2019,civil,Total Resueltas,88086
+2019,civil,Transacción,6407
+2019,trabajo,Allanamiento,49
+2019,trabajo,Caducidad,3790
+2019,trabajo,Conciliación,32513
+2019,trabajo,Desistimiento,750
+2019,trabajo,Incompetencia,2057
+2019,trabajo,Ingresadas,66366
+2019,trabajo,Interlocutorios,1165
+2019,trabajo,Sentencia,8380
+2019,trabajo,Total Resueltas,54326
+2019,trabajo,Transacción,5622
+2020,civil,Allanamiento,67
+2020,civil,Caducidad,3355
+2020,civil,Conciliación,3295
+2020,civil,Desistimiento,1409
+2020,civil,Incompetencia,8073
+2020,civil,Ingresadas,165161
+2020,civil,Interlocutorios,13626
+2020,civil,Sentencia,15351
+2020,civil,Total Resueltas,49834
+2020,civil,Transacción,4658
+2020,trabajo,Allanamiento,40
+2020,trabajo,Caducidad,1938
+2020,trabajo,Conciliación,16994
+2020,trabajo,Desistimiento,572
+2020,trabajo,Incompetencia,2513
+2020,trabajo,Ingresadas,57360
+2020,trabajo,Interlocutorios,1653
+2020,trabajo,Sentencia,4534
+2020,trabajo,Total Resueltas,33404
+2020,trabajo,Transacción,5160
+2021,civil,Allanamiento,116
+2021,civil,Caducidad,4963
+2021,civil,Conciliación,4283
+2021,civil,Desistimiento,1605
+2021,civil,Incompetencia,13522
+2021,civil,Ingresadas,274496
+2021,civil,Interlocutorios,19314
+2021,civil,Sentencia,20135
+2021,civil,Total Resueltas,69728
+2021,civil,Transacción,5790
+2021,trabajo,Allanamiento,60
+2021,trabajo,Caducidad,2604
+2021,trabajo,Conciliación,26799
+2021,trabajo,Desistimiento,668
+2021,trabajo,Incompetencia,2449
+2021,trabajo,Ingresadas,81486
+2021,trabajo,Interlocutorios,2082
+2021,trabajo,Sentencia,7506
+2021,trabajo,Total Resueltas,51092
+2021,trabajo,Transacción,8924
+2022,civil,Allanamiento,156
+2022,civil,Caducidad,7654
+2022,civil,Conciliación,4684
+2022,civil,Desistimiento,2133
+2022,civil,Incompetencia,11280
+2022,civil,Ingresadas,223638
+2022,civil,Interlocutorios,30103
+2022,civil,Sentencia,21937
+2022,civil,Total Resueltas,84275
+2022,civil,Transacción,6328
+2022,trabajo,Allanamiento,85
+2022,trabajo,Caducidad,4457
+2022,trabajo,Conciliación,33688
+2022,trabajo,Desistimiento,828
+2022,trabajo,Incompetencia,2186
+2022,trabajo,Ingresadas,91751
+2022,trabajo,Interlocutorios,3100
+2022,trabajo,Sentencia,10961
+2022,trabajo,Total Resueltas,65905
+2022,trabajo,Transacción,10600
+2023,civil,Allanamiento,135
+2023,civil,Caducidad,8314
+2023,civil,Conciliación,4828
+2023,civil,Desistimiento,2186
+2023,civil,Incompetencia,12383
+2023,civil,Ingresadas,217838
+2023,civil,Interlocutorios,35360
+2023,civil,Sentencia,24127
+2023,civil,Total Resueltas,93279
+2023,civil,Transacción,5946
+2023,trabajo,Allanamiento,136
+2023,trabajo,Caducidad,7273
+2023,trabajo,Conciliación,39513
+2023,trabajo,Desistimiento,806
+2023,trabajo,Incompetencia,2506
+2023,trabajo,Ingresadas,104116
+2023,trabajo,Interlocutorios,4731
+2023,trabajo,Sentencia,15438
+2023,trabajo,Total Resueltas,84242
+2023,trabajo,Transacción,13839
+2024,civil,Allanamiento,106
+2024,civil,Caducidad,9892
+2024,civil,Conciliación,5222
+2024,civil,Desistimiento,2223
+2024,civil,Incompetencia,13231
+2024,civil,Ingresadas,212443
+2024,civil,Interlocutorios,42133
+2024,civil,Sentencia,26465
+2024,civil,Total Resueltas,105348
+2024,civil,Transacción,6076
+2024,trabajo,Allanamiento,92
+2024,trabajo,Caducidad,6694
+2024,trabajo,Conciliación,41617
+2024,trabajo,Desistimiento,834
+2024,trabajo,Incompetencia,2995
+2024,trabajo,Ingresadas,107849
+2024,trabajo,Interlocutorios,6208
+2024,trabajo,Sentencia,18747
+2024,trabajo,Total Resueltas,94044
+2024,trabajo,Transacción,16857
 2025,civil,Allanamiento,153
 2025,civil,Caducidad,9885
 2025,civil,Conciliación,5592
